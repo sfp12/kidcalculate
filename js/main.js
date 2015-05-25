@@ -162,23 +162,26 @@ $(document).ready(function(){
 		*/
 		var level_to_road = function(level){
 			var result = '';
+
+			result += '<td><p>start</p></td>';
 			if(level == 1 || level == 2){
-				for(var i = 0; i < 11; i++){
+				for(var i = 1; i < 11; i++){
 					result += '<td><p>'+i+'</p></td>'; 
 				}
 			}else if(level == 3){
-				for(var i = 0; i < 21; i++){
+				for(var i = 1; i < 21; i++){
 					$('.road').css('width', '100%');
 					result += '<td><p>'+i+'</p></td>'; 
 				}				 
 			}else if(level == 5 || level == 4){
 				$('.road').css('width', '100%');
-				for(var i = 0; i < 31; i++){
+				for(var i = 1; i < 31; i++){
 					result += '<td><p>'+i+'</p></td>'; 
 				}
 			}else{
 				return;
 			}
+			result += '<td><p>end</p></td>';
 
 			return result;
 		}
@@ -250,7 +253,15 @@ $(document).ready(function(){
 
 			var pos = $(click_target).text();
 			if(now_position[a]+step == pos){					
-				equal_first_result = 1;			
+				equal_first_result = 1;	
+				record_6341(a);
+					
+				var left_val = 0;
+				if(level > 3){
+					left_val = $(click_target).position().left-5;
+    			}else{
+    				left_val = $(click_target).position().left;
+    			}
     			//达到了终点
     			if(pos == end_position){
     				if(a == 0){
@@ -262,20 +273,15 @@ $(document).ready(function(){
 						Numset_2 += 20;
 						end_score = Numset_2;
 					}
-    			}
-				
-    			record_6341(a); 
-
-    			now_position[a] = +pos;
-    			var left_val = 0;
-    			if(level > 3){
-    				left_val = $(click_target).position().left-5;
+					$('#users_'+(a+1)).animate({left:(left_val+50)+'px'}, 'linear', function(){
+	    				phase(a);
+	    			}); 
     			}else{
-    				left_val = $(click_target).position().left;
-    			} 
-    			$('#users_'+(a+1)).animate({left:left_val+'px'}, 'linear', function(){
-    				phase(a);
-    			});	        			
+    				$('#users_'+(a+1)).animate({left:(left_val)+'px'}, 'linear', function(){
+	    				phase(a);
+	    			});
+    			}
+    			now_position[a] = +pos;	    				        			
     		}else{
     			//点击了错误的位置
     			if(a == 0){
@@ -298,8 +304,16 @@ $(document).ready(function(){
 		var stepInEnd_s = function(a){
 			
 			equal_first_result = 1;
+			record_6341(a); 
+			now_position[a] = +(now_position[a]+step);
+			var left_val = findTarget(a);
+			if(level > 3){
+				left_val = left_val-5;
+			}else{
+				left_val = left_val;
+			}			   			
 			//电脑移动，到达终点
-			if(now_position[a]+step == end_position){
+			if(now_position[a] == end_position){
 				if(a == 0){
 					radiolist2set_1 += 20;
 					Numset_1 += 20;
@@ -308,23 +322,15 @@ $(document).ready(function(){
 					radiolist2set_2 += 20;
 					Numset_2 += 20;
 					end_score = Numset_2;
-				}    				
-			}
-
-			record_6341(a);  	
-
-			//string转为int
-			now_position[a] = +(now_position[a]+step);
-			var left_val = findTarget(a);
-			if(level > 3){
-				left_val = left_val-5;
+				}
+				$('#users_'+(a+1)).animate({left:(left_val+50)+'px'}, 'linear', function(){
+					phase(a);
+				});    				
 			}else{
-				left_val = left_val;
-			}    			
-			$('#users_'+(a+1)).animate({left:left_val+'px'}, 'linear', function(){
-				phase(a);
-			});		
-			
+				$('#users_'+(a+1)).animate({left:left_val+'px'}, 'linear', function(){
+					phase(a);
+				});
+			}				
 		}
 
 		/*
@@ -354,7 +360,7 @@ $(document).ready(function(){
     			}else{
     				left_val = $(click_target).position().left;
     			}
-    			$('#users_'+(a+1)).animate({left:left_val+'px'}, 'linear', function(){
+    			$('#users_'+(a+1)).animate({left:(left_val+50)+'px'}, 'linear', function(){
     				phase(a);
     			});	    
 			}else{
@@ -402,7 +408,7 @@ $(document).ready(function(){
 			}else{
 				left_val = left_val;
 			}    
-			$('#users_'+(a+1)).animate({left:left_val+'px'}, 'linear', function(){
+			$('#users_'+(a+1)).animate({left:(left_val+50)+'px'}, 'linear', function(){
 				phase(a);
 			});
 					
