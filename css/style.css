@@ -1,0 +1,120 @@
+body{
+	background-color: black;
+	/*color:white;*/
+}
+/*------------------大容器------------------*/
+.container{
+	/*最后可以去掉*/
+	border: 1px solid black;
+	height:500px;
+	margin-top: 50px;
+}
+
+/*----------------用户模块---------------*/
+.users{
+ 	width:200px;
+ 	height:200px;
+ 	margin: 0 auto;
+ 	margin-bottom: 10px
+}
+
+.users_1_con{
+	width:50%;
+	height:100%;
+	float:left;
+	position: relative;
+}
+
+.users_2_con{
+	width:50%;
+	height:100%;
+	float:right;
+	position: relative;
+}
+
+.users_1{
+	width:100%;
+	height:50%;
+	background:url(../images/user1.png) center no-repeat;
+	position: absolute;
+	top: 100px;
+}
+
+.users_2{
+	width:100%;
+	height:50%;
+	background:url(../images/user2.png) center no-repeat;
+	position: absolute;
+	top: 100px;	
+}
+
+.balloon{
+	width:100%;
+	height:50%;
+	background:url(../images/mogu.png) center no-repeat;  
+	text-align: center;	
+	font-size: 27px;	
+}
+
+/*balloon*/
+.broke_num{
+	width:100%;
+	height:50%;
+}
+
+.broke_num p{
+	margin: 0;
+	text-align: center;
+	font-size: 83px;
+    line-height: 100px;
+    color:white;
+}
+
+/*---------------------格子模块----------------*/
+.road{
+	width:601px;
+	height:100px;
+	margin:0 auto;
+	position: relative;
+}
+
+.table_con{
+	padding-top: 25px;
+}
+
+/*图片的大小还需要重新调整*/
+.road .users_1,
+.road .users_2{
+	width:50px;
+	height:50px;
+	float:left;
+}
+
+.road .users_1{
+	margin-top: -8px;
+	background:url(../images/user1_50.png) center no-repeat;
+	position: absolute;
+	top:0px;
+	left:0px;
+}
+
+.road .users_2{
+	margin-top: -8px;
+	background:url(../images/user2_50.png) center no-repeat;
+	position: absolute;
+	top:0px;
+	left:0px;
+}
+
+.level_1 td{
+	width:50px;
+	height:50px;
+	border: 1px solid black;
+	background-color: white;
+}
+
+td p{
+	margin:0;
+	text-align: center;
+	line-height: 50px;
+}
