@@ -586,8 +586,8 @@ $(document).ready(function(){
 				}else if(users_step[user_id] == users_step[1-user_id]){
 					//数字大小相同
 
-					//产生一个5000-10000的随机数
-					var ran_time = Math.random()*5000+5000;
+					//产生一个10-20s的随机数
+					var ran_time = Math.random()*10000+10000;
 					setTimeout(function(){						
 
 						//之前没有点击过
