@@ -52,6 +52,25 @@ $(document).ready(function(){
 		var radiolist4set_2 = 0; 
 		var radiolist5set_2 = 0; 
 		var radiolist6set_2 = 0;
+
+		//把tr的动物封装为parabola对象
+		var parabola = function(a, left){
+			return new Parabola({
+			        el: '#users_'+(a+1),
+			        offset: [50, 0],
+			        curvature: 0.005,
+			        duration: 250,
+			        callback:function(){			            
+			            if(($('#users_'+(a+1)).position().left+1) < left){
+			            	setTimeout(function(){
+			            		parabolaJump(a, left);
+			            	}, 100);			            	
+			            }else{
+			            	phase(a);
+			            }
+			        }
+			       });
+		}
 		
 		/*
 		*根据level取得终点的位置
@@ -249,11 +268,10 @@ $(document).ready(function(){
 
 		};
 
-		//获取随机颜色
-		// var getRandomColor = function(){ 
-		//   // return '#'+('00000'+(Math.random()*0x1000000<<0).toString(16)).substr(-6);
-		//   return Math.floor(Math.random()*16777215);
-		// }
+		var parabolaJump = function(a, left){
+			var user = parabola(a, left);
+			user.start();
+		}		
 
 		/*
 		*如果移动的距离未超过终点,只是为了把startMove切分一下
@@ -282,13 +300,9 @@ $(document).ready(function(){
 						Numset_2 += 20;
 						end_score = Numset_2;
 					}
-					$('#users_'+(a+1)).animate({left:(left_val+50)+'px'}, 'linear', function(){
-	    				phase(a);
-	    			}); 
-    			}else{
-    				$('#users_'+(a+1)).animate({left:(left_val)+'px'}, 'linear', function(){
-	    				phase(a);
-	    			});
+	    			parabolaJump(a, left_val+50);
+    			}else{    				
+	    			parabolaJump(a, left_val);
     			}
     			now_position[a] = +pos;	    				        			
     		}else{
@@ -331,14 +345,10 @@ $(document).ready(function(){
 					radiolist2set_2 += 20;
 					Numset_2 += 20;
 					end_score = Numset_2;
-				}
-				$('#users_'+(a+1)).animate({left:(left_val+50)+'px'}, 'linear', function(){
-					phase(a);
-				});    				
-			}else{
-				$('#users_'+(a+1)).animate({left:left_val+'px'}, 'linear', function(){
-					phase(a);
-				});
+				}				 
+				parabolaJump(a, left_val+50);
+			}else{				
+				parabolaJump(a, left_val);
 			}				
 		}
 
@@ -368,10 +378,8 @@ $(document).ready(function(){
     				left_val = $(click_target).position().left-5;
     			}else{
     				left_val = $(click_target).position().left;
-    			}
-    			$('#users_'+(a+1)).animate({left:(left_val+50)+'px'}, 'linear', function(){
-    				phase(a);
-    			});	    
+    			}    			
+    			parabolaJump(a, left_val+50);	    
 			}else{
 				//点击了错误的位置
     			if(a == 0){
@@ -416,11 +424,8 @@ $(document).ready(function(){
 				left_val = left_val-5;
 			}else{
 				left_val = left_val;
-			}    
-			$('#users_'+(a+1)).animate({left:(left_val+50)+'px'}, 'linear', function(){
-				phase(a);
-			});
-					
+			}			
+			parabolaJump(a, left_val+50);					
 		}
 
 		/*
