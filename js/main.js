@@ -30,7 +30,9 @@ $(document).ready(function(){
 		var click_target = -1;
 		var sfp = {};
 		var color_tr = ['#85b119', '#dc411d', '#8eb562', '#c5eed', '#2ba703', '#6f2957', '#5a07c', '#495527', '#c212e2', '#63e872']; 
-		var color_p = ['#7a4ee6', '#23bee2', '#714a9d', '#f3a112', '#d458fc', '#90d6a8', '#fa5f83', '#b6aad8', '#3ded1d', '#9c178d']; 
+		var color_p = ['#7a4ee6', '#23bee2', '#714a9d', '#f3a112', '#d458fc', '#90d6a8', '#fa5f83', '#b6aad8', '#3ded1d', '#9c178d'];
+		//抛物线跳跃的时间和间隔
+		var parabola_array = [250, 100]; 
 
 
 	//需要记录的字段
@@ -76,20 +78,16 @@ $(document).ready(function(){
 		*根据level取得终点的位置
 		*/
 		var levelToEndpos = function(level){
-			var result = 0;
+			var result = 0;			
 
-			if(level == 1){
+			if(level == 1 || level == 4 || level == 5 || level == 6 || level == 10 || level == 11 || level == 12){
 				result = 10;
-			}else if(level == 2){
-				result = 10;
-			}else if(level == 3){
-				result = 20;
-			}else if(level == 4){
-				result = 30;
-			}else if(level == 5){
+			}else if(level == 2 || level == 7 || level == 13){
+				result = 20;				 
+			}else if(level == 3 || level == 8 || level == 9 || level == 14 || level == 15){
 				result = 30;
 			}else{
-				console.log('level error, level='+level);				
+				console.log('level error, level='+level);
 			}
 
 			return result;
@@ -185,17 +183,17 @@ $(document).ready(function(){
 			var result = '';
 
 			result += '<td style="background-image:url(images/start.png)"><p></p></td>';
-			if(level == 1 || level == 2){
+			if(level == 1 || level == 4 || level == 5 || level == 6 || level == 10 || level == 11 || level == 12){
 				for(var i = 1; i < 11; i++){
-					// var color_value = getRandomColor();
+					$('.road').css('width', '601');
 					result += '<td style="background:'+color_tr[i-1]+'; color:#'+color_p[i-1]+'"><p>'+i+'</p></td>'; 
 				}
-			}else if(level == 3){
+			}else if(level == 2 || level == 7 || level == 13){
 				for(var i = 1; i < 21; i++){
 					$('.road').css('width', '100%');
 					result += '<td style="background:'+color_tr[(i-1)%10]+'; color:#'+color_p[(i-1)%10]+'"><p>'+i+'</p></td>';
 				}				 
-			}else if(level == 5 || level == 4){
+			}else if(level == 3 || level == 8 || level == 9 || level == 14 || level == 15){
 				$('.road').css('width', '100%');
 				for(var i = 1; i < 31; i++){
 					result += '<td style="background:'+color_tr[(i-1)%10]+'; color:#'+color_p[(i-1)%10]+'"><p>'+i+'</p></td>';
@@ -213,21 +211,22 @@ $(document).ready(function(){
 		*输出：随机数
 		*/
 		var level_to_step = function(level){
-			var result = 0;
+			var result = 0;			
 
-			if(level == 1){
-				result = Math.ceil(Math.random()*2);
+			if(level == 1 || level == 9 || level == 15){
+				result = 10;
 			}else if(level == 2){
-				result = Math.ceil(Math.random()*3);
+				result = 20;
 			}else if(level == 3){
-				result = Math.ceil(Math.random()*5);
-			}else if(level == 4){
-				result = Math.ceil(Math.random()*5);
-			}else if(level == 5){
-				result = Math.ceil(Math.random()*10);
+				result = 30;	
+			}else if(level == 4 || level == 10 || level == 11){
+				result = 2;
+			}else if(level == 5 || level == 12){
+				result = 3;
+			}else if(level == 6 || level == 7 || level == 8 || level == 14 || level ==13){
+				result = 5;
 			}else{
-				console.log('level error; level='+level);
-				return;
+				console.log('level error, in level_to_step, level='+level);
 			}
 
 			return result;
@@ -284,11 +283,13 @@ $(document).ready(function(){
 				record_6341(a);
 					
 				var left_val = 0;
-				if(level > 3){
-					left_val = $(click_target).position().left-5;
-    			}else{
-    				left_val = $(click_target).position().left;
-    			}
+				//应该也不需要了
+				// if(level > 3){
+				// 	left_val = $(click_target).position().left-5;
+    // 			}else{
+    // 				left_val = $(click_target).position().left;
+    // 			}
+    			left_val = $(click_target).position().left;
     			//达到了终点
     			if(pos == end_position){
     				if(a == 0){
@@ -330,11 +331,11 @@ $(document).ready(function(){
 			record_6341(a); 
 			now_position[a] = +(now_position[a]+step);
 			var left_val = findTarget(a);
-			if(level > 3){
-				left_val = left_val-5;
-			}else{
-				left_val = left_val;
-			}			   			
+			// if(level > 3){
+			// 	left_val = left_val-5;
+			// }else{
+			// 	left_val = left_val;
+			// }						   			
 			//电脑移动，到达终点
 			if(now_position[a] == end_position){
 				if(a == 0){
@@ -374,11 +375,12 @@ $(document).ready(function(){
 
     			now_position[a] = +pos;
     			var left_val = 0;
-    			if(level > 3){
-    				left_val = $(click_target).position().left-5;
-    			}else{
-    				left_val = $(click_target).position().left;
-    			}    			
+    			// if(level > 3){
+    			// 	left_val = $(click_target).position().left-5;
+    			// }else{
+    			// 	left_val = $(click_target).position().left;
+    			// }
+    			left_val = $(click_target).position().left;    			
     			parabolaJump(a, left_val+50);	    
 			}else{
 				//点击了错误的位置
@@ -420,11 +422,11 @@ $(document).ready(function(){
 
 			var left_val = findTarget(a);
 			//微调位置
-			if(level > 3){
-				left_val = left_val-5;
-			}else{
-				left_val = left_val;
-			}			
+			// if(level > 3){
+			// 	left_val = left_val-5;
+			// }else{
+			// 	left_val = left_val;
+			// }			
 			parabolaJump(a, left_val+50);					
 		}
 
@@ -839,15 +841,22 @@ $(document).ready(function(){
 			//单人模式，双人模式对话框
 			$('#select_level').dialog({
 				resizable: false,
-		    	height:240,
+				width:370,
+		    	height:470,
 		        modal: true,
 		        buttons: {
 		        	"开始": function(){
 		        		level = $('input[name="level"]:checked').val();
-		        		// console.log('level:'+level);
+		        		if(level == 4 || level == 6 || level == 7 || level == 8 || level == 9 || level == 5){
+		        			choose_type = 'add';
+		        		}else if(level == 10 || level == 11 || level == 12 || level == 13 || level == 14 || level == 15){
+							choose_type = 'minus';
+		        		}else{
+		        			console.log('no need click ,level = 1, 2, 3');
+		        		}
 		        		//改变格子
-		        		var road_content = level_to_road(level)
-		        		// console.log('road_content:'+road_content);
+		        		var road_content = level_to_road(level);
+		        		
 		        		$('tr').html('');
 						$('tr').append(road_content);
 						if(level > 3){
