@@ -2,12 +2,20 @@ body{
 	background-color: black;
 	/*color:white;*/
 }
+/*------------------标题------------------*/
+.title{
+	width:570px;
+	height:120px;
+	margin:0 auto;
+	background-image: url('../images/title.png');
+}
 /*------------------大容器------------------*/
 .container{
 	/*最后可以去掉*/
 	border: 1px solid black;
 	height:500px;
-	margin-top: 50px;
+	margin-top: 200px;
+	width: 1601px;
 }
 
 /*----------------用户模块---------------*/
@@ -117,4 +125,5 @@ td p{
 	margin:0;
 	text-align: center;
 	line-height: 50px;
+	font-size: 20px;
 }

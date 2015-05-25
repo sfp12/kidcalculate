@@ -29,6 +29,8 @@ $(document).ready(function(){
 		var end_position = 0;
 		var click_target = -1;
 		var sfp = {};
+		var color_tr = ['#85b119', '#dc411d', '#8eb562', '#c5eed', '#2ba703', '#6f2957', '#5a07c', '#495527', '#c212e2', '#63e872']; 
+		var color_p = ['#7a4ee6', '#23bee2', '#714a9d', '#f3a112', '#d458fc', '#90d6a8', '#fa5f83', '#b6aad8', '#3ded1d', '#9c178d']; 
 
 
 	//需要记录的字段
@@ -163,25 +165,26 @@ $(document).ready(function(){
 		var level_to_road = function(level){
 			var result = '';
 
-			result += '<td><p>start</p></td>';
+			result += '<td style="background-image:url(images/start.png)"><p></p></td>';
 			if(level == 1 || level == 2){
 				for(var i = 1; i < 11; i++){
-					result += '<td><p>'+i+'</p></td>'; 
+					// var color_value = getRandomColor();
+					result += '<td style="background:'+color_tr[i-1]+'; color:#'+color_p[i-1]+'"><p>'+i+'</p></td>'; 
 				}
 			}else if(level == 3){
 				for(var i = 1; i < 21; i++){
 					$('.road').css('width', '100%');
-					result += '<td><p>'+i+'</p></td>'; 
+					result += '<td style="background:'+color_tr[(i-1)%10]+'; color:#'+color_p[(i-1)%10]+'"><p>'+i+'</p></td>';
 				}				 
 			}else if(level == 5 || level == 4){
 				$('.road').css('width', '100%');
 				for(var i = 1; i < 31; i++){
-					result += '<td><p>'+i+'</p></td>'; 
+					result += '<td style="background:'+color_tr[(i-1)%10]+'; color:#'+color_p[(i-1)%10]+'"><p>'+i+'</p></td>';
 				}
 			}else{
 				return;
 			}
-			result += '<td><p>end</p></td>';
+			result += '<td style="background-image:url(images/end.png)"><p></p></td>';
 
 			return result;
 		}
@@ -245,6 +248,12 @@ $(document).ready(function(){
 			}
 
 		};
+
+		//获取随机颜色
+		// var getRandomColor = function(){ 
+		//   // return '#'+('00000'+(Math.random()*0x1000000<<0).toString(16)).substr(-6);
+		//   return Math.floor(Math.random()*16777215);
+		// }
 
 		/*
 		*如果移动的距离未超过终点,只是为了把startMove切分一下
