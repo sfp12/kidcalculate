@@ -13,7 +13,7 @@ body{
 .container{
 	/*最后可以去掉*/
 	border: 1px solid black;
-	height:500px;
+	/*height:500px;*/
 	margin-top: 200px;
 	width: 1601px;
 }
@@ -126,4 +126,9 @@ td p{
 	text-align: center;
 	line-height: 50px;
 	font-size: 20px;
+}
+/*---------------------跳跃模块----------------*/
+.jump{
+	width: 368px;
+  	float: right;
 }

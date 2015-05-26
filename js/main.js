@@ -33,8 +33,7 @@ $(document).ready(function(){
 		var color_p = ['#7a4ee6', '#23bee2', '#714a9d', '#f3a112', '#d458fc', '#90d6a8', '#fa5f83', '#b6aad8', '#3ded1d', '#9c178d'];
 		//抛物线跳跃的时间和间隔
 		var parabola_array = [250, 100]; 
-
-
+		
 	//需要记录的字段
 		var Numset_1 = 0;
 		var Timeset_1 = []; 
@@ -56,17 +55,17 @@ $(document).ready(function(){
 		var radiolist6set_2 = 0;
 
 		//把tr的动物封装为parabola对象
-		var parabola = function(a, left){
+		var parabola = function(a, left, interval_time){
 			return new Parabola({
 			        el: '#users_'+(a+1),
 			        offset: [50, 0],
-			        curvature: 0.005,
-			        duration: 250,
+			        curvature: 0.01,
+			        duration: interval_time[0],
 			        callback:function(){			            
 			            if(($('#users_'+(a+1)).position().left+1) < left){
 			            	setTimeout(function(){
-			            		parabolaJump(a, left);
-			            	}, 100);			            	
+			            		parabolaJump(a, left, interval_time);
+			            	}, interval_time[1]);			            	
 			            }else{
 			            	phase(a);
 			            }
@@ -190,7 +189,7 @@ $(document).ready(function(){
 				}
 			}else if(level == 2 || level == 7 || level == 13){
 				for(var i = 1; i < 21; i++){
-					$('.road').css('width', '100%');
+					$('.road').css('width', '1101');
 					result += '<td style="background:'+color_tr[(i-1)%10]+'; color:#'+color_p[(i-1)%10]+'"><p>'+i+'</p></td>';
 				}				 
 			}else if(level == 3 || level == 8 || level == 9 || level == 14 || level == 15){
@@ -214,17 +213,17 @@ $(document).ready(function(){
 			var result = 0;			
 
 			if(level == 1 || level == 9 || level == 15){
-				result = 10;
+				result = Math.ceil(Math.random()*10);
 			}else if(level == 2){
-				result = 20;
+				result = Math.ceil(Math.random()*20);
 			}else if(level == 3){
-				result = 30;	
+				result = Math.ceil(Math.random()*30);	
 			}else if(level == 4 || level == 10 || level == 11){
-				result = 2;
+				result = Math.ceil(Math.random()*2);
 			}else if(level == 5 || level == 12){
-				result = 3;
+				result = Math.ceil(Math.random()*3);
 			}else if(level == 6 || level == 7 || level == 8 || level == 14 || level ==13){
-				result = 5;
+				result = Math.ceil(Math.random()*5);
 			}else{
 				console.log('level error, in level_to_step, level='+level);
 			}
@@ -267,8 +266,8 @@ $(document).ready(function(){
 
 		};
 
-		var parabolaJump = function(a, left){
-			var user = parabola(a, left);
+		var parabolaJump = function(a, left, interval_time){
+			var user = parabola(a, left, interval_time);
 			user.start();
 		}		
 
@@ -283,12 +282,7 @@ $(document).ready(function(){
 				record_6341(a);
 					
 				var left_val = 0;
-				//应该也不需要了
-				// if(level > 3){
-				// 	left_val = $(click_target).position().left-5;
-    // 			}else{
-    // 				left_val = $(click_target).position().left;
-    // 			}
+				
     			left_val = $(click_target).position().left;
     			//达到了终点
     			if(pos == end_position){
@@ -301,9 +295,9 @@ $(document).ready(function(){
 						Numset_2 += 20;
 						end_score = Numset_2;
 					}
-	    			parabolaJump(a, left_val+50);
+	    			parabolaJump(a, left_val+50, parabola_array);
     			}else{    				
-	    			parabolaJump(a, left_val);
+	    			parabolaJump(a, left_val, parabola_array);
     			}
     			now_position[a] = +pos;	    				        			
     		}else{
@@ -331,11 +325,7 @@ $(document).ready(function(){
 			record_6341(a); 
 			now_position[a] = +(now_position[a]+step);
 			var left_val = findTarget(a);
-			// if(level > 3){
-			// 	left_val = left_val-5;
-			// }else{
-			// 	left_val = left_val;
-			// }						   			
+					   			
 			//电脑移动，到达终点
 			if(now_position[a] == end_position){
 				if(a == 0){
@@ -347,9 +337,9 @@ $(document).ready(function(){
 					Numset_2 += 20;
 					end_score = Numset_2;
 				}				 
-				parabolaJump(a, left_val+50);
+				parabolaJump(a, left_val+50, parabola_array);
 			}else{				
-				parabolaJump(a, left_val);
+				parabolaJump(a, left_val, parabola_array);
 			}				
 		}
 
@@ -375,13 +365,9 @@ $(document).ready(function(){
 
     			now_position[a] = +pos;
     			var left_val = 0;
-    			// if(level > 3){
-    			// 	left_val = $(click_target).position().left-5;
-    			// }else{
-    			// 	left_val = $(click_target).position().left;
-    			// }
+    			
     			left_val = $(click_target).position().left;    			
-    			parabolaJump(a, left_val+50);	    
+    			parabolaJump(a, left_val+50, parabola_array);	    
 			}else{
 				//点击了错误的位置
     			if(a == 0){
@@ -421,13 +407,8 @@ $(document).ready(function(){
 			now_position[a] = end_position;
 
 			var left_val = findTarget(a);
-			//微调位置
-			// if(level > 3){
-			// 	left_val = left_val-5;
-			// }else{
-			// 	left_val = left_val;
-			// }			
-			parabolaJump(a, left_val+50);					
+						
+			parabolaJump(a, left_val+50, parabola_array);					
 		}
 
 		/*
@@ -822,6 +803,20 @@ $(document).ready(function(){
 		//程序开始前的准备工作:对话框--addEvent;
 		var prepare = function() {
 
+			$('#slow-jump').css('border', '1px solid yellow');
+
+			$('#fast-jump').on('click', function(){
+				$('#fast-jump').css('border', '1px solid yellow');
+				$('#slow-jump').css('border', '');
+				parabola_array = [100, 10];
+			})
+
+			$('#slow-jump').on('click', function(){
+				$('#slow-jump').css('border', '1px solid yellow');
+				$('#fast-jump').css('border', '');
+				parabola_array = [250, 100];
+			})
+
 			$('#choose_1').on('click', function(){
 				user_id = 0;
 				$( "#select_animal" ).dialog( "close" );
@@ -859,10 +854,7 @@ $(document).ready(function(){
 		        		
 		        		$('tr').html('');
 						$('tr').append(road_content);
-						if(level > 3){
-							$('#users_1').css('left', '-5px');
-							$('#users_2').css('left', '-5px');
-						}
+						
 						$( "#select_level" ).dialog( "close" );
 		        		$( "#select_model" ).dialog({
 					      resizable: false,
@@ -953,12 +945,7 @@ $(document).ready(function(){
 				 			//改变格子			 			
 							var road_content = level_to_road(level);
 							$('tr').html('');
-							$('tr').append(road_content);
-							if(level > 3){
-								$('#users_1').css('left', '-5px');
-								$('#users_2').css('left', '-5px');
-							}
-							//还需微调road width.
+							$('tr').append(road_content);							
 			 			}			 					 			
 
 			 		}else{
