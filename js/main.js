@@ -98,13 +98,23 @@ $(document).ready(function(){
 		var getStep = function(){
 			var result = 0;
 
-			if(choose_type == 'add'){
-    			//加法
-    			result = users_step[0]+users_step[1];
-    		}else{
-    			//减法
-    			result = Math.abs(users_step[0]-users_step[1]);
-    		}
+			if(level < 4){
+				if(users_step[0] > users_step[1]){
+					result = users_step[0];
+				}else{
+					result = users_step[1];
+				}
+			}else{
+				if(choose_type == 'add'){
+	    			//加法
+	    			result = users_step[0]+users_step[1];
+	    		}else{
+	    			//减法
+	    			result = Math.abs(users_step[0]-users_step[1]);
+	    		}
+			}
+
+			
 
     		return result;
 		}
@@ -928,7 +938,7 @@ $(document).ready(function(){
 			 		var normative_score = normativeScore(end_score);
 			 		if(normative_score > 4){
 			 			//下一关游戏			 			
-			 			if(level == 5){
+			 			if(level == 15){
 			 				alert('恭喜你闯关成功！');
 			 				//整个游戏完全结果，可在此输出所有的指标
 			 				end();
