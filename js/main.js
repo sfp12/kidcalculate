@@ -58,7 +58,7 @@ $(document).ready(function(){
 		var parabola = function(a, left, interval_time){
 			return new Parabola({
 			        el: '#users_'+(a+1),
-			        offset: [41, 0],
+			        offset: [43, 0],
 			        curvature: 0.01,
 			        duration: interval_time[0],
 			        callback:function(){			            
@@ -196,17 +196,17 @@ $(document).ready(function(){
 			if(level == 1 || level == 4 || level == 5 || level == 6 || level == 10 || level == 11 || level == 12){
 				for(var i = 1; i < 11; i++){
 					$('.road').css('width', '601');
-					result += '<td style="background:'+color_tr[i-1]+'; color:#'+color_p[i-1]+'"><p>'+i+'</p></td>'; 
+					result += '<td style="background:'+color_tr[i-1]+'; color:'+color_p[i-1]+'"><p>'+i+'</p></td>'; 
 				}
 			}else if(level == 2 || level == 7 || level == 13){
 				for(var i = 1; i < 21; i++){
 					$('.road').css('width', '1101');
-					result += '<td style="background:'+color_tr[(i-1)%10]+'; color:#'+color_p[(i-1)%10]+'"><p>'+i+'</p></td>';
+					result += '<td style="background:'+color_tr[(i-1)%10]+'; color:'+color_p[(i-1)%10]+'"><p>'+i+'</p></td>';
 				}				 
 			}else if(level == 3 || level == 8 || level == 9 || level == 14 || level == 15){
 				$('.road').css('width', '100%');
 				for(var i = 1; i < 31; i++){
-					result += '<td style="background:'+color_tr[(i-1)%10]+'; color:#'+color_p[(i-1)%10]+'"><p>'+i+'</p></td>';
+					result += '<td style="background:'+color_tr[(i-1)%10]+'; color:'+color_p[(i-1)%10]+'"><p>'+i+'</p></td>';
 				}
 			}else{
 				return;
@@ -307,7 +307,7 @@ $(document).ready(function(){
 						Numset_2 += 20;
 						end_score = Numset_2;
 					}
-	    			parabolaJump(a, left_val+50, parabola_array);
+	    			parabolaJump(a, left_val+43, parabola_array);
     			}else{    				
 	    			parabolaJump(a, left_val, parabola_array);
     			}
@@ -349,7 +349,7 @@ $(document).ready(function(){
 					Numset_2 += 20;
 					end_score = Numset_2;
 				}				 
-				parabolaJump(a, left_val+50, parabola_array);
+				parabolaJump(a, left_val+43, parabola_array);
 			}else{				
 				parabolaJump(a, left_val, parabola_array);
 			}				
@@ -379,7 +379,7 @@ $(document).ready(function(){
     			var left_val = 0;
     			
     			left_val = $(click_target).position().left;    			
-    			parabolaJump(a, left_val+50, parabola_array);	    
+    			parabolaJump(a, left_val+43, parabola_array);	    
 			}else{
 				//点击了错误的位置
     			if(a == 0){
@@ -420,7 +420,7 @@ $(document).ready(function(){
 
 			var left_val = findTarget(a);
 						
-			parabolaJump(a, left_val+50, parabola_array);					
+			parabolaJump(a, left_val+43, parabola_array);					
 		}
 
 		/*
