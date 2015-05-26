@@ -58,7 +58,7 @@ $(document).ready(function(){
 		var parabola = function(a, left, interval_time){
 			return new Parabola({
 			        el: '#users_'+(a+1),
-			        offset: [50, 0],
+			        offset: [41, 0],
 			        curvature: 0.01,
 			        duration: interval_time[0],
 			        callback:function(){			            
@@ -67,6 +67,7 @@ $(document).ready(function(){
 			            		parabolaJump(a, left, interval_time);
 			            	}, interval_time[1]);			            	
 			            }else{
+			            	$('.jump').css('display', 'none');
 			            	phase(a);
 			            }
 			        }
@@ -191,7 +192,7 @@ $(document).ready(function(){
 		var level_to_road = function(level){
 			var result = '';
 
-			result += '<td style="background-image:url(images/start.png)"><p></p></td>';
+			result += '<td style="background:url(images/start.png) no-repeat -6px"><p></p></td>';
 			if(level == 1 || level == 4 || level == 5 || level == 6 || level == 10 || level == 11 || level == 12){
 				for(var i = 1; i < 11; i++){
 					$('.road').css('width', '601');
@@ -210,7 +211,7 @@ $(document).ready(function(){
 			}else{
 				return;
 			}
-			result += '<td style="background-image:url(images/end.png)"><p></p></td>';
+			result += '<td style="background:url(images/end.png) no-repeat -6px"><p></p></td>';
 
 			return result;
 		}
@@ -278,6 +279,7 @@ $(document).ready(function(){
 
 		var parabolaJump = function(a, left, interval_time){
 			var user = parabola(a, left, interval_time);
+			$('.jump').css('display', 'block');
 			user.start();
 		}		
 
