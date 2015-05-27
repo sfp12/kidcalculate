@@ -807,9 +807,9 @@ $(document).ready(function(){
 		        buttons: {
 		        	"开始": function(){
 		        		level = $('input[name="level"]:checked').val();
-		        		if(level == 4 || level == 6 || level == 7 || level == 8 || level == 9 || level == 5){
+		        		if(level == 4 || level == 5 || level == 6 || level == 7 || level == 8){
 		        			choose_type = 'add';
-		        		}else if(level == 10 || level == 11 || level == 12 || level == 13 || level == 14 || level == 15){
+		        		}else if(level == 9 || level == 10 || level == 11 || level == 12 || level == 13){
 							choose_type = 'minus';
 		        		}else{
 		        			console.log('no need click ,level = 1, 2, 3');
@@ -914,7 +914,7 @@ $(document).ready(function(){
 			 				$('#users_2').css('left', '0px');
 
 			 				level++;
-			 				if(level > 9){
+			 				if(level > 8){
 			 					choose_type = 'minus';
 			 				}
 			 							 			
