@@ -1,3 +1,5 @@
+//松耦合，也不能太松，那样的话，就很难联系起来了。
+
 $(document).ready(function(){	
 	var myObject = (function() {		
 	//文档中定义的变量
@@ -32,8 +34,15 @@ $(document).ready(function(){
 		var color_tr = ['#85b119', '#dc411d', '#8eb562', '#c5eed', '#2ba703', '#6f2957', '#5a07c', '#495527', '#c212e2', '#63e872']; 
 		var color_p = ['#7a4ee6', '#23bee2', '#714a9d', '#f3a112', '#d458fc', '#90d6a8', '#fa5f83', '#b6aad8', '#3ded1d', '#9c178d'];
 		//抛物线跳跃的时间和间隔
-		var parabola_array = [250, 100]; 
-		
+		var parabola_array = [250, 100];
+		//表示单人模式下，电脑的定时器，如果用户点对之后，需要停止single_sto;
+		var single_sto = '';		
+		//快跳和慢跳点击之后才执行跳跃，需要全局变量来传参数
+		var p_a = '';
+		var p_left = '';
+		//双人模式下，选中的用户个数，为了判断喜洋洋和灰太狼是否都选中。
+		var double_users = [0, 0];
+
 	//需要记录的字段
 		var Numset_1 = 0;
 		var Timeset_1 = []; 
@@ -80,11 +89,11 @@ $(document).ready(function(){
 		var levelToEndpos = function(level){
 			var result = 0;			
 
-			if(level == 1 || level == 4 || level == 5 || level == 6 || level == 10 || level == 11 || level == 12){
+			if(level == 1 || level == 4 || level == 5 || level == 9 || level == 10){
 				result = 10;
-			}else if(level == 2 || level == 7 || level == 13){
+			}else if(level == 2 || level == 6 || level == 11){
 				result = 20;				 
-			}else if(level == 3 || level == 8 || level == 9 || level == 14 || level == 15){
+			}else if(level == 3 || level == 7 || level == 8 || level == 12 || level == 13){
 				result = 30;
 			}else{
 				console.log('level error, level='+level);
@@ -138,10 +147,10 @@ $(document).ready(function(){
     			var temp = users_step[0]+users_step[1]
     			if(a == 0){
     				radiolist1set_1 += temp*3;
-    				Numset_1 += step*3;
+    				Numset_1 += temp*3;
     			}else{
     				radiolist1set_2 += temp*3;
-    				Numset_2 += step*3;
+    				Numset_2 += temp*3;
     			}    			
     		}
 		}
@@ -150,7 +159,6 @@ $(document).ready(function(){
 		*电脑自动移动时，需要找到它的目标地点
 		*/
 		var findTarget = function(a){
-
 			var result = 0;
 
 			var dom_array = $('#users_'+(a+1)+'_tr td');
@@ -161,7 +169,6 @@ $(document).ready(function(){
 			}
 
 			return result;
-
 		}
 
 		/*
@@ -170,14 +177,12 @@ $(document).ready(function(){
 		var record_6341 = function(a){
 			if(a == 0){
 				//记录计算总次数
-				radiolist6set_1 += 1;
     			//记录准确度
     			radiolist3set_1.push(1);
     			radiolist4set_1 += 1;
     			getBaseScore(a);
 			}else{
 				//记录计算总次数
-				radiolist6set_2 += 1;
     			//记录准确度
     			radiolist3set_2.push(1);
     			radiolist4set_2 += 1;
@@ -193,18 +198,18 @@ $(document).ready(function(){
 			var result = '';
 
 			result += '<td style="background:url(images/start.png) no-repeat -6px"><p></p></td>';
-			if(level == 1 || level == 4 || level == 5 || level == 6 || level == 10 || level == 11 || level == 12){
+			if(level == 1 || level == 4 || level == 5 || level == 9 || level == 10){
 				for(var i = 1; i < 11; i++){
-					$('.road').css('width', '601');
+					$('.road').css('width', '516');
 					result += '<td style="background:'+color_tr[i-1]+'; color:'+color_p[i-1]+'"><p>'+i+'</p></td>'; 
 				}
-			}else if(level == 2 || level == 7 || level == 13){
+			}else if(level == 2 || level == 6 || level == 11){
 				for(var i = 1; i < 21; i++){
-					$('.road').css('width', '1101');
+					$('.road').css('width', '946');
 					result += '<td style="background:'+color_tr[(i-1)%10]+'; color:'+color_p[(i-1)%10]+'"><p>'+i+'</p></td>';
 				}				 
-			}else if(level == 3 || level == 8 || level == 9 || level == 14 || level == 15){
-				$('.road').css('width', '100%');
+			}else if(level == 3 || level == 7 || level == 8 || level == 12 || level == 13){
+				$('.road').css('width', '1391');
 				for(var i = 1; i < 31; i++){
 					result += '<td style="background:'+color_tr[(i-1)%10]+'; color:'+color_p[(i-1)%10]+'"><p>'+i+'</p></td>';
 				}
@@ -223,17 +228,17 @@ $(document).ready(function(){
 		var level_to_step = function(level){
 			var result = 0;			
 
-			if(level == 1 || level == 9 || level == 15){
+			if(level == 1 || level == 8 || level == 13){
 				result = Math.ceil(Math.random()*10);
 			}else if(level == 2){
 				result = Math.ceil(Math.random()*20);
 			}else if(level == 3){
 				result = Math.ceil(Math.random()*30);	
-			}else if(level == 4 || level == 10 || level == 11){
+			}else if(level == 4 || level == 9){
 				result = Math.ceil(Math.random()*2);
-			}else if(level == 5 || level == 12){
+			}else if(level == 5 || level == 10){
 				result = Math.ceil(Math.random()*3);
-			}else if(level == 6 || level == 7 || level == 8 || level == 14 || level ==13){
+			}else if(level == 6 || level == 7 || level == 11 || level == 12){
 				result = Math.ceil(Math.random()*5);
 			}else{
 				console.log('level error, in level_to_step, level='+level);
@@ -278,8 +283,7 @@ $(document).ready(function(){
 		};
 
 		var parabolaJump = function(a, left, interval_time){
-			var user = parabola(a, left, interval_time);
-			$('.jump').css('display', 'block');
+			var user = parabola(a, left, interval_time);			
 			user.start();
 		}		
 
@@ -288,71 +292,59 @@ $(document).ready(function(){
 		*/
 		var stepInEnd = function(a){
 
-			var pos = $(click_target).text();
-			if(now_position[a]+step == pos){					
-				equal_first_result = 1;	
-				record_6341(a);
-					
-				var left_val = 0;
-				
-    			left_val = $(click_target).position().left;
-    			//达到了终点
-    			if(pos == end_position){
-    				if(a == 0){
-						radiolist2set_1 += 20;
-						Numset_1 += 20;
-						end_score = Numset_1;
-					}else{
-						radiolist2set_2 += 20;
-						Numset_2 += 20;
-						end_score = Numset_2;
-					}
-	    			parabolaJump(a, left_val+43, parabola_array);
-    			}else{    				
-	    			parabolaJump(a, left_val, parabola_array);
-    			}
-    			now_position[a] = +pos;	    				        			
-    		}else{
-    			//点击了错误的位置
-    			if(a == 0){
-    				radiolist3set_1.push(0);
-    			}else{
-    				radiolist3set_2.push(0);
-    			}	    			
-    			//数字相同，先点，点击错误
-    			if((users_step[a] == users_step[1-a]) && (users_time[1-a] == 0)){
-					//不运行pahse()
-				}else{
-					phase(a);
-				}    			
-    		}
-		}
+			if(click_target == -1){
+				//来自singleroad
+				equal_first_result = 1;
+				record_6341(a); 
+				now_position[a] = +(now_position[a]+step);
+				var left_val = findTarget(a);
+				$('.jump').css('display', 'block');				
+				p_a = a;
+				p_left = left_val;			
+			}else{
+				//来自trClick
+				var pos = $(click_target).text();
+				//minus, start， 数字相等，需要得到原地的text，但是为空，需要赋为0
+				if(pos == ''){
+					pos = 0;
+				}
+				if(now_position[a]+step == pos){					
+					equal_first_result = 1;
+					if(single_sto != ''){
+						clearTimeout(single_sto);
+					}						
+					record_6341(a);
+						
+					var left_val = $(click_target).position().left;	    			
+	    			
 
-		/*
-		*如果移动的距离未超过终点,只是为了把startMove切分一下
-		*/
-		var stepInEnd_s = function(a){
-			
-			equal_first_result = 1;
-			record_6341(a); 
-			now_position[a] = +(now_position[a]+step);
-			var left_val = findTarget(a);
-					   			
-			//电脑移动，到达终点
-			if(now_position[a] == end_position){
-				if(a == 0){
-					radiolist2set_1 += 20;
-					Numset_1 += 20;
-					end_score = Numset_1;
-				}else{
-					radiolist2set_2 += 20;
-					Numset_2 += 20;
-					end_score = Numset_2;
-				}				 
-				parabolaJump(a, left_val+43, parabola_array);
-			}else{				
-				parabolaJump(a, left_val, parabola_array);
-			}				
+	    			if(step != 0){
+	    				$('.jump').css('display', 'block');	    				
+	    				p_a = a;
+						p_left = left_val;	    				
+	    				now_position[a] = +pos;
+	    			}else{
+	    				phase(a);
+	    			}	    		
+	    			
+	    				    				        			
+	    		}else{
+	    			alert('您算错啦！');
+	    			click_target == -1;
+	    			//点击了错误的位置
+	    			if(a == 0){
+	    				radiolist3set_1.push(0);
+	    			}else{
+	    				radiolist3set_2.push(0);
+	    			}	    			
+	    			//数字相同，先点，点击错误
+	    			if((users_step[a] == users_step[1-a]) && (users_time[1-a] == 0)){
+						//不运行pahse()
+					}else{
+						phase(a);
+					}    			
+	    		}
+			}			
 		}
 
 		/*
@@ -360,9 +352,10 @@ $(document).ready(function(){
 		*/
 		var stepOverEnd = function(a){
 
-			var pos = $(click_target).text();				
-			if(pos == end_position){				
+			if(click_target == -1){
+				//来自singleroad
 				equal_first_result = 1;
+				//电脑移动，超过终点，不会出错，只能到达终点
 				if(a == 0){
 					radiolist2set_1 += 20;
 					Numset_1 += 20;
@@ -371,56 +364,64 @@ $(document).ready(function(){
 					radiolist2set_2 += 20;
 					Numset_2 += 20;
 					end_score = Numset_2;
-				}		        				
-				
-				record_6341(a); 
+				}
 
-    			now_position[a] = +pos;
-    			var left_val = 0;
-    			
-    			left_val = $(click_target).position().left;    			
-    			parabolaJump(a, left_val+43, parabola_array);	    
+				record_6341(a); 	
+
+				now_position[a] = end_position;
+
+				var left_val = findTarget(a);
+
+				$('.jump').css('display', 'block');				
+				p_a = a;
+				p_left = left_val+43;			
 			}else{
-				//点击了错误的位置
-    			if(a == 0){
-    				radiolist3set_1.push(0);
-    			}else{
-    				radiolist3set_2.push(0);
-    			}
-    			//数字相同，先点，点击错误
-    			if((users_step[a] == users_step[1-a]) && (users_time[1-a] == 0)){
-					//不运行pahse()
-				}else{
-					phase(a);
-				} 
-			}			
+				//来自trClick
+				var pos = $(click_target).text();
+				//minus, start， 数字相等，需要得到原地的text，但是为空，需要赋为0
+				if(pos == ''){
+					pos = 0;
+				}				
+				if(pos == end_position){				
+					equal_first_result = 1;
+					if(single_sto != ''){
+						clearTimeout(single_sto);
+					}						
+					if(a == 0){
+						radiolist2set_1 += 20;
+						Numset_1 += 20;
+						end_score = Numset_1;
+					}else{
+						radiolist2set_2 += 20;
+						Numset_2 += 20;
+						end_score = Numset_2;
+					}		        				
 					
-		}
+					record_6341(a); 
 
-		/*
-		*如果移动的距离超过终点,
-		*/
-		var stepOverEnd_s = function(a){
+	    			now_position[a] = +pos;
+	    			var left_val = $(click_target).position().left;
 
-			equal_first_result = 1;
-			//电脑移动，超过终点，不会出错，只能到达终点
-			if(a == 0){
-				radiolist2set_1 += 20;
-				Numset_1 += 20;
-				end_score = Numset_1;
-			}else{
-				radiolist2set_2 += 20;
-				Numset_2 += 20;
-				end_score = Numset_2;
-			}
-
-			record_6341(a); 	
-
-			now_position[a] = end_position;
-
-			var left_val = findTarget(a);
-						
-			parabolaJump(a, left_val+43, parabola_array);					
+	    			$('.jump').css('display', 'block');	    			
+	    			p_a = a;
+					p_left = left_val+43;	    			    
+				}else{
+					alert('您算错啦！');
+					click_target == -1;
+					//点击了错误的位置
+	    			if(a == 0){
+	    				radiolist3set_1.push(0);
+	    			}else{
+	    				radiolist3set_2.push(0);
+	    			}
+	    			//数字相同，先点，点击错误
+	    			if((users_step[a] == users_step[1-a]) && (users_time[1-a] == 0)){
+						//不运行pahse()
+					}else{
+						phase(a);
+					} 
+				}
+			}					
 		}
 
 		/*
@@ -428,10 +429,12 @@ $(document).ready(function(){
 		*/
 		var stepAndEnd = function(a){
 
+			end_position = levelToEndpos(level);
+
 			if(model == 'double'){
 
 				//如果移动的距离超过终点						
-				if(now_position[a]+step > end_position){
+				if(now_position[a]+step >= end_position){
 
 					stepOverEnd(a);
 
@@ -444,13 +447,13 @@ $(document).ready(function(){
 			}else{
 
 				//如果移动的距离超过终点						
-				if(now_position[a]+step > end_position){
+				if(now_position[a]+step >= end_position){
 
-					stepOverEnd_s(a);
+					stepOverEnd(a);
 
 				}else{
 
-					stepInEnd_s(a);
+					stepInEnd(a);
 
 				}
 
@@ -471,25 +474,12 @@ $(document).ready(function(){
 			}			
 			click_array[a+2] = 1;
 			
-			e = e || window.event;
-			click_target = e.target || e.srcElement;			
-
-			stepAndEnd(a);
-			
-		}
-
-		/*
-		*trClick基本操作，从之前没点过开始；电脑自己移动，没有点击e
-		*/
-		var startMove_s = function(a, e){
-			
-			//记录计算总次数
-			if(a == 0){
-				radiolist5set_1 += 1;
+			if(e != ''){
+				e = e || window.event;
+				click_target = e.target || e.srcElement;	
 			}else{
-				radiolist5set_2 += 1;
-			}			
-			click_array[a+2] = 1;						
+				click_target = -1;
+			}						
 
 			stepAndEnd(a);
 			
@@ -498,34 +488,18 @@ $(document).ready(function(){
 		/*
 		*tr的点击事件处理程序:单人模式下，给用户添加事件
 		*/
-		var trClick_d = function(a, e){
-			sfp.choose_type = choose_type;
-			sfp.model = model;
-			sfp.user_id = user_id;
-			sfp.level = level;
-			sfp.now_position = now_position;
-			sfp.equal_first_result = equal_first_result;
-			sfp.click_array = click_array;
-			sfp.users_step = users_step;
-			sfp.users_time = users_time;
-			sfp.step = step;
-			sfp.end_position = end_position;
-			sfp.click_target = click_target;
-
-			console.log('sfp:'+JSON.stringify(sfp));
+		var trClick = function(a, e){			
 			
 			//判断user click是否完成
 			if((click_array[a] == 1) && (click_array[1-a] == 1)){
 				//用户点击完成
 
 				//跑动距离
-				step = getStep();				
+				step = getStep();
 
-				if(users_step[a] < users_step[1-a]){
-
-				}else if(users_step[a] == users_step[1-a]){
-					//数字相同
-
+				if(model == 'single'){
+					//单人模式，不需要它比较大小
+					//数字大
 					//之前没有点击过
 					if(click_array[a+2] == 0){
 
@@ -537,95 +511,41 @@ $(document).ready(function(){
 						}else{
 							Timeset_2.push(users_time[a]);
 						}
-						//另一个用户未点击
-						if(users_time[1-a] == 0){
-
-							startMove(a, e);
-
-						}else{
-							//用户点了，但是没点对
-							if(equal_first_result != 1){
-
-								startMove(a, e);
-
-							}
-							
-						}
-
-					}else{
-						console.error('click already');
-					}
-
-				}else{
-					//数字大
-					//之前没有点击过
-					if(click_array[a+2] == 0){
 
 						startMove(a, e);
 
 					}else{
 						console.error('click already');
 					}
-				}
-        		
-			}else{
-				console.error('还有用户未点击');				
-			}
-		};
+				}else{
+					//双人模式，需要它比较大小
+					if(users_step[a] < users_step[1-a]){
+						console.log(a+'的数字小');
+					}else if(users_step[a] == users_step[1-a]){
+						//数字相同
 
-		/*
-		*a为电脑 数字变气球 负责检查数字大小 决定road点击和变化
-		*/
-		var singleRoad = function(){
-			
-			//判断user click是否完成
-			if((click_array[user_id] == 1) && (click_array[1-user_id] == 1)){
-				//用户点击完成
-
-				//跑动距离
-				step = getStep();
-
-				if(users_step[user_id] < users_step[1-user_id]){
-					//电脑的数字大
-
-					//直接执行点击事件（移动），没有时间间隔
-					//之前没有点击过
-					if(click_array[3-user_id] == 0){
-
-						startMove_s(1-user_id);
-
-					}else{
-						console.error('click already');
-					}
-
-				}else if(users_step[user_id] == users_step[1-user_id]){
-					//数字大小相同
-
-					//产生一个10-20s的随机数
-					var ran_time = Math.random()*10000+10000;
-					setTimeout(function(){						
 
 						//之前没有点击过
-						if(click_array[3-user_id] == 0){
+						if(click_array[a+2] == 0){
 
 							//计算反应时间
 				    		end_click = Date.now();
-							users_time[1-user_id] = end_click-start_click;
-							if(user_id == 0){
-								Timeset_1.push(users_time[1-user_id]);
+							users_time[a] = end_click-start_click;
+							if(a == 0){
+								Timeset_1.push(users_time[a]);
 							}else{
-								Timeset_2.push(users_time[1-user_id]);
+								Timeset_2.push(users_time[a]);
 							}
 							//另一个用户未点击
-							if(users_time[user_id] == 0){
+							if(users_time[1-a] == 0){
 
-								startMove_s(1-user_id);
+								startMove(a, e);
 
 							}else{
 								//用户点了，但是没点对
 								if(equal_first_result != 1){
 
-									startMove_s(1-user_id);
+									startMove(a, e);
 
 								}
 								
@@ -635,10 +555,103 @@ $(document).ready(function(){
 							console.error('click already');
 						}
 
+					}else{
+						//数字大
+						//之前没有点击过
+						if(click_array[a+2] == 0){
+
+							end_click = Date.now();
+							users_time[a] = end_click-start_click;
+							if(a == 0){
+								Timeset_1.push(users_time[a]);
+							}else{
+								Timeset_2.push(users_time[a]);
+							}
+
+							startMove(a, e);
+
+						}else{
+							console.error('click already');
+						}
+					}
+
+				}				
+
+				
+        		
+			}else{
+				console.error('还有用户未点击');				
+			}
+		};
+
+		/*
+		*a为电脑 数字变气球 负责检查数字大小 决定road点击和变化;都是电脑move的情况
+		*/
+		var singleRoad = function(){
+
+			console.log('test single');
+			
+			//判断user click是否完成
+			if((click_array[user_id] == 1) && (click_array[1-user_id] == 1)){
+				//用户点击完成
+
+				//跑动距离
+				step = getStep();
+				console.log('single , 比较大小');
+
+				if(users_step[user_id] < users_step[1-user_id]){
+					console.log('电脑数字大');
+					//电脑的数字大
+
+					//直接执行点击事件（移动），没有时间间隔
+					//之前没有点击过
+					if(click_array[3-user_id] == 0){
+
+						end_click = Date.now();
+						users_time[1-user_id] = end_click-start_click;
+						if(user_id == 0){
+							Timeset_2.push(users_time[1-user_id]);
+						}else{
+							Timeset_1.push(users_time[1-user_id]);
+						}
+
+						startMove(1-user_id, '');
+
+					}else{
+						console.error('click already');
+					}
+
+				}else if(users_step[user_id] == users_step[1-user_id]){
+					console.log('数字相同');
+					//数字大小相同
+
+					//产生一个10-20s的随机数
+					var ran_time = Math.random()*10000+10000;
+					single_sto = setTimeout(function(){						
+
+						//之前没有点击过
+						if(click_array[3-user_id] == 0){
+
+							//计算反应时间
+				    		end_click = Date.now();
+							users_time[1-user_id] = end_click-start_click;
+							if(user_id == 0){
+								Timeset_2.push(users_time[1-user_id]);
+							}else{
+								Timeset_1.push(users_time[1-user_id]);
+							}
+
+							//这里不需要判断用户的情况，如果没有被cleartimeout，则继续执行
+							startMove(1-user_id, '');							
+
+						}else{
+							console.error('click already');
+						}
+
 					}, ran_time);
 
 				}else{
-
+					console.log('用户数字大');
 					console.error('user_id:'+user_id+'; 用户数字大，正常');
 
 				}
@@ -651,131 +664,45 @@ $(document).ready(function(){
 		}
 
 		/*
-		*user click 基本操作
-		*/
-		var userClickOperate = function(a){
-
-			var pos = $('#users_'+(a+1)+'_b').position();
-				        
-	        $('#users_'+(a+1)+'_b').animate({
-	              'top':pos.top - 65 + 'px'
-	          }, 150, 'swing', function(){
-	            $('#users_'+(a+1)+'_bal').removeClass('balloon').addClass('broke_num');  
-	            users_step[a] = level_to_step(level);    
-	            $('#users_'+(a+1)+'_bal').html('<p>'+users_step[a]+'</p>');
-	          });
-
-	        setTimeout(function(){
-	            $('#users_'+(a+1)+'_b').animate({
-	            'top': pos.top + 'px'
-	            }, 150, 'swing', function(){
-	            	if(model == 'single' && a != user_id){				
-
-						//电脑点击的话
-						singleRoad();			
-
-					}              
-	            });
-	        }, 150);
-
-			click_array[a] = 1;
-			start_click = Date.now();		
-
-		};
-
-		/*
 		*user的点击事件处理程序
 		*/
-		var userClick_d = function(a){
-			sfp.choose_type = choose_type;
-			sfp.model = model;
-			sfp.user_id = user_id;
-			sfp.level = level;
-			sfp.now_position = now_position;
-			sfp.equal_first_result = equal_first_result;
-			sfp.click_array = click_array;
-			sfp.users_step = users_step;
-			sfp.users_time = users_time;
-			sfp.step = step;
-			sfp.end_position = end_position;
-			sfp.click_target = click_target;
-
-			// console.log('sfp:'+JSON.stringify(sfp));
+		var userClick = function(a){			
 
 			//如果没有点击过
-			if(click_array[a] == 0){
+			if(click_array[a] == 0){				
 
-				userClickOperate(a);				
+				var pos = $('#users_'+(a+1)+'_b').position();
+				        
+		        $('#users_'+(a+1)+'_b').animate({
+		              'top':pos.top - 65 + 'px'
+		          }, 150, 'swing', function(){
+		            $('#users_'+(a+1)+'_bal').removeClass('balloon').addClass('broke_num');  
+		            users_step[a] = level_to_step(level);    
+		            $('#users_'+(a+1)+'_bal').html('<p>'+users_step[a]+'</p>');
+		          });
+
+		        click_array[a] = 1;
+				start_click = Date.now();
+				//console.log(a+' start_click:'+start_click);
+
+		        setTimeout(function(){
+		            $('#users_'+(a+1)+'_b').animate({
+		            'top': pos.top + 'px'
+		            }, 150, 'swing', function(){	            	
+
+		            	if(model == 'single'){
+		            		if(a == user_id){
+		            			userClick(1-a);
+		            			console.log('电脑开始点击');
+		            		}else{
+		            			console.log('开始比较大小');
+		            			singleRoad();
+		            		}
+		            	}		                  
+		            });
+		        }, 150);				
 				
 			}			
-
-		};
-
-		/*
-		*user的点击事件处理程序
-		*/
-		var userClick_s = function(a){
-			sfp.choose_type = choose_type;
-			sfp.model = model;
-			sfp.user_id = user_id;
-			sfp.level = level;
-			sfp.now_position = now_position;
-			sfp.equal_first_result = equal_first_result;
-			sfp.click_array = click_array;
-			sfp.users_step = users_step;
-			sfp.users_time = users_time;
-			sfp.step = step;
-			sfp.end_position = end_position;
-			sfp.click_target = click_target;
-
-			// console.log('sfp:'+JSON.stringify(sfp));
-
-			//如果没有点击过
-			if(click_array[a] == 0){
-
-				userClickOperate(a);
-
-				setTimeout(function(){
-
-					userClickOperate(1-a);								
-					
-				}, 1000 );				
-				
-			}						
-
-		};
-
-		/*
-		*为user和road（1,2）添加click事件
-		*/
-		var addEvent_user_d = function(a){
-			//点击user的气球			
-			$('#users_'+a+'_bal').on('click', function(){
-				userClick_d(a-1);	
-			});
-			
-			//为user 的tr加click事件
-			$('#users_'+a+'_tr').on('click', function(e){
-				//点击tr的事件处理函数
-				trClick_d(a-1, e);				
-			});
-
-		};
-
-		/*
-		*为user和road（1,2）添加click事件
-		*/
-		var addEvent_user_s = function(a){
-			//点击user的气球			
-			$('#users_'+a+'_bal').on('click', function(){
-				userClick_s(a-1);	
-			});
-			
-			//为user 的tr加click事件
-			$('#users_'+a+'_tr').on('click', function(e){
-				//点击tr的事件处理函数
-				trClick_d(a-1, e);				
-			});
 
 		};
 
@@ -783,28 +710,60 @@ $(document).ready(function(){
 		*dialog close之后，给气球和road添加的事件
 		*
 		*/
-		var addEvent = function(){
-
-			//根据级数，确定终点的位置
-			end_position = levelToEndpos(level);
+		var addEvent = function(){			
 
 			if(model == 'double'){
 
-				addEvent_user_d(1);
-				addEvent_user_d(2);				
+				//点击user的气球			
+				$('#users_1_bal').on('click', function(){
+					userClick(0);	
+				});
+				
+				//为user 的tr加click事件
+				$('#users_1_tr').on('click', function(e){
+					//点击tr的事件处理函数
+					trClick(0, e);				
+				});	
+
+				//点击user的气球			
+				$('#users_2_bal').on('click', function(){
+					userClick(1);	
+				});
+				
+				//为user 的tr加click事件
+				$('#users_2_tr').on('click', function(e){
+					//点击tr的事件处理函数
+					trClick(1, e);				
+				});			
 
 			}else{
 			//单人模式
 
 				if(user_id == 0){
 
-					//给1添加点击事件
-					addEvent_user_s(1);
+					//给1添加点击事件 点击user的气球								
+					$('#users_1_bal').on('click', function(){
+						userClick(0);	
+					});
+
+					//为user 的tr加click事件
+					$('#users_1_tr').on('click', function(e){
+						//点击tr的事件处理函数
+						trClick(0, e);				
+					});
 
 				}else{
 
-					//给2添加点击事件
-					addEvent_user_s(2);
+					//给2添加点击事件 点击user的气球								
+					$('#users_2_bal').on('click', function(){
+						userClick(1);	
+					});
+
+					//为user 的tr加click事件
+					$('#users_2_tr').on('click', function(e){
+						//点击tr的事件处理函数
+						trClick(1, e);				
+					});
 					
 				}
 
@@ -813,36 +772,72 @@ $(document).ready(function(){
 		};
 
 		//程序开始前的准备工作:对话框--addEvent;
-		var prepare = function() {
-
-			$('#slow-jump').css('border', '1px solid yellow');
+		var prepare = function() {			
 
 			$('#fast-jump').on('click', function(){
 				$('#fast-jump').css('border', '1px solid yellow');
 				$('#slow-jump').css('border', '');
-				parabola_array = [100, 10];
+				parabola_array = [100, 10];				
+				parabolaJump(p_a, p_left, parabola_array);					
 			})
 
 			$('#slow-jump').on('click', function(){
 				$('#slow-jump').css('border', '1px solid yellow');
 				$('#fast-jump').css('border', '');
 				parabola_array = [250, 100];
+				parabolaJump(p_a, p_left, parabola_array);	
 			})
 
 			$('#choose_1').on('click', function(){
-				user_id = 0;
+				if(model == 'single'){
+					user_id = 0;
+				}				
 				$( "#select_animal" ).dialog( "close" );
-	            $('#choose_1').css('display', 'none');
-		        $('#choose_2').css('display', 'none');
-		        addEvent();
+				$('#choose_1').css('display', 'none');
+	        	$('#choose_2').css('display', 'none');
+	        	addEvent();
+
+				// if(model == 'single'){
+				// 	user_id = 0;
+				// 	$( "#select_animal" ).dialog( "close" );
+				// 	$('#choose_1').css('display', 'none');
+		  //       	$('#choose_2').css('display', 'none');
+				// }else{
+				// 	double_users[0] = 1;
+				// 	//双人模式下，点击喜洋洋
+				// 	if(double_users[0] == 1 && double_users[1] == 1){
+				// 		$( "#select_animal" ).dialog( "close" );
+				// 		$('#choose_1').css('display', 'none');
+			 //        	$('#choose_2').css('display', 'none');
+				// 	}
+				// }				            
+		  //       addEvent();	
 			});
 
 			$('#choose_2').on('click', function(){
-				user_id = 1;
+				if(model == 'single'){
+					user_id = 1;
+				}				
 				$( "#select_animal" ).dialog( "close" );
-	            $('#choose_1').css('display', 'none');
-		        $('#choose_2').css('display', 'none');
-		        addEvent();
+				$('#choose_1').css('display', 'none');
+	        	$('#choose_2').css('display', 'none');
+	        	addEvent();
+
+				// if(model == 'single'){
+				// 	user_id = 1;
+				// 	$( "#select_animal" ).dialog( "close" );
+				// 	$('#choose_1').css('display', 'none');
+		  //       	$('#choose_2').css('display', 'none');
+				// }else{
+				// 	//双人模式下，点击灰太狼
+				// 	double_users[1] = 1;
+				// 	if(double_users[0] == 1 && double_users[1] == 1){
+				// 		$( "#select_animal" ).dialog( "close" );
+				// 		$('#choose_1').css('display', 'none');
+			 //        	$('#choose_2').css('display', 'none');
+				// 	}
+				// }					            
+		  //       addEvent();
 			});
 
 			//单人模式，双人模式对话框
@@ -886,8 +881,16 @@ $(document).ready(function(){
 					        },
 					        '双人模式': function() {
 					        	model = 'double';
-					        	$( this ).dialog( "close" );
-					            addEvent();	
+					        	$('#choose_1').css('display', 'inline-block');
+					        	$('#choose_2').css('display', 'inline-block');
+					        	$( "#select_model" ).dialog( "close" );
+					            $( "#select_animal" ).dialog({
+							      resizable: false,
+							      height:190,
+							      modal: true				      
+							    });
+					        	//$( this ).dialog( "close" );
+					            //addEvent();						            		            
 					        }
 					      }
 					    });
@@ -897,19 +900,29 @@ $(document).ready(function(){
 		    
 		};
 
-				
+		var sfpDebug = function(){
+			//测试开始对话框：ok
+			// console.log('level:'+level);
+			// console.log('model:'+model);
+			// console.log('choose_type:'+choose_type);
+			// console.log('user_id:'+user_id);
+
+			//user click 
+			// console.log('click_array:'+click_array);
+			// console.log('start_click:'+start_click);
+
+		}			
 
 		/*
 		 * 一个回合结束后的操作
 		 * @param 
 		 * @return 
 		 */
-		var phase = function(a){
+		var phase = function(a){			
 
 		 	//判断移动完成：数组元素是否全为1
 		 	if((click_array[2]+click_array[3]) == 0){
 		 		//road中都没有点击
-
 		 	}else{ 
 		 				 		
 		 		//触发phase的用户，点击正确，再看时间
@@ -923,13 +936,18 @@ $(document).ready(function(){
 				step = 0;
 				equal_first_result = 0;	
 				click_target = -1;
+				single_sto = '';
 
 				//把数字变为气球
 				$('#users_1_bal').html('<img src="images/click.png"><p>点这里</p>');
 				$('#users_1_bal').removeClass('broke_num').addClass('balloon');
 				$('#users_2_bal').html('<img src="images/click.png"><p>点这里</p>');
-				$('#users_2_bal').removeClass('broke_num').addClass('balloon');		
-				// out();
+				$('#users_2_bal').removeClass('broke_num').addClass('balloon');	
+				$('.jump').css('display', 'none');	
+				radiolist6set_1 = radiolist4set_1/radiolist5set_1;
+				radiolist6set_2 = radiolist4set_2/radiolist5set_2;
+				out();
+
 				//有没有到终点
 				if(end_score == 0){
 					//没有到终点
@@ -940,11 +958,12 @@ $(document).ready(function(){
 			 		var normative_score = normativeScore(end_score);
 			 		if(normative_score > 4){
 			 			//下一关游戏			 			
-			 			if(level == 15){
+			 			if(level == 13){
 			 				alert('恭喜你闯关成功！');
 			 				//整个游戏完全结果，可在此输出所有的指标
 			 				end();
 			 			}else{
+
 			 				end_score = 0;
 			 				alert('恭喜你闯关成功，请继续下一关！');
 			 				//用户回到最初的位置
@@ -952,14 +971,15 @@ $(document).ready(function(){
 			 				$('#users_2').css('left', '0px');
 
 			 				level++;
-			 				//根据级数，确定终点的位置
-							end_position = levelToEndpos(level);			 			
+			 				if(level > 9){
+			 					choose_type = 'minus';
+			 				}
+			 							 			
 				 			//改变格子			 			
 							var road_content = level_to_road(level);
 							$('tr').html('');
 							$('tr').append(road_content);							
-			 			}			 					 			
-
+			 			}
 			 		}else{
 			 			//4分或4分以下
 			 			alert('闯关惜败，再来一次!');
@@ -984,7 +1004,7 @@ $(document).ready(function(){
 		/*
 		* 输出需要记录的字段
 		*/
-		var out = function(){
+		var out = function(){			
 			console.error('喜洋洋');
 			console.log('Numset_1:'+Numset_1);
 			console.log('Timeset_1:'+Timeset_1);

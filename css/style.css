@@ -21,7 +21,7 @@ body{
  	width:200px;
  	height:200px;
  	margin: 0 auto;
- 	margin-bottom: 10px
+ 	margin-bottom: 21px;
 }
 
 .users_1_con{
@@ -97,7 +97,7 @@ body{
 }
 
 .road .users_1{
-	margin-top: -8px;
+	margin-top: -24px;
 	background:url(../images/user1_50.png) center no-repeat;
 	position: absolute;
 	top:0px;
@@ -105,7 +105,7 @@ body{
 }
 
 .road .users_2{
-	margin-top: -8px;
+	margin-top: -24px;
 	background:url(../images/user2_50.png) center no-repeat;
 	position: absolute;
 	top:0px;
