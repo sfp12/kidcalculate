@@ -1,5 +1,3 @@
-//松耦合，也不能太松，那样的话，就很难联系起来了。
-
 $(document).ready(function(){	
 	var myObject = (function() {		
 	//文档中定义的变量
@@ -520,7 +518,7 @@ $(document).ready(function(){
 				}else{
 					//双人模式，需要它比较大小
 					if(users_step[a] < users_step[1-a]){
-						console.log(a+'的数字小');
+						
 					}else if(users_step[a] == users_step[1-a]){
 						//数字相同
 
@@ -575,9 +573,7 @@ $(document).ready(function(){
 						}
 					}
 
-				}				
-
-				
+				}			
         		
 			}else{
 				console.error('还有用户未点击');				
@@ -587,20 +583,16 @@ $(document).ready(function(){
 		/*
 		*a为电脑 数字变气球 负责检查数字大小 决定road点击和变化;都是电脑move的情况
 		*/
-		var singleRoad = function(){
-
-			console.log('test single');
+		var singleRoad = function(){			
 			
 			//判断user click是否完成
 			if((click_array[user_id] == 1) && (click_array[1-user_id] == 1)){
 				//用户点击完成
 
 				//跑动距离
-				step = getStep();
-				console.log('single , 比较大小');
+				step = getStep();				
 
-				if(users_step[user_id] < users_step[1-user_id]){
-					console.log('电脑数字大');
+				if(users_step[user_id] < users_step[1-user_id]){					
 					//电脑的数字大
 
 					//直接执行点击事件（移动），没有时间间隔
@@ -621,8 +613,7 @@ $(document).ready(function(){
 						console.error('click already');
 					}
 
-				}else if(users_step[user_id] == users_step[1-user_id]){
-					console.log('数字相同');
+				}else if(users_step[user_id] == users_step[1-user_id]){					
 					//数字大小相同
 
 					//产生一个10-20s的随机数
@@ -651,7 +642,7 @@ $(document).ready(function(){
 					}, ran_time);
 
 				}else{
-					console.log('用户数字大');
+
 					console.error('user_id:'+user_id+'; 用户数字大，正常');
 
 				}
@@ -682,8 +673,7 @@ $(document).ready(function(){
 		          });
 
 		        click_array[a] = 1;
-				start_click = Date.now();
-				//console.log(a+' start_click:'+start_click);
+				start_click = Date.now();				
 
 		        setTimeout(function(){
 		            $('#users_'+(a+1)+'_b').animate({
@@ -701,9 +691,7 @@ $(document).ready(function(){
 		            	}		                  
 		            });
 		        }, 150);				
-				
-			}			
-
+			}
 		};
 
 		/*
@@ -796,22 +784,7 @@ $(document).ready(function(){
 				$('#choose_1').css('display', 'none');
 	        	$('#choose_2').css('display', 'none');
 	        	addEvent();
-
-				// if(model == 'single'){
-				// 	user_id = 0;
-				// 	$( "#select_animal" ).dialog( "close" );
-				// 	$('#choose_1').css('display', 'none');
-		  //       	$('#choose_2').css('display', 'none');
-				// }else{
-				// 	double_users[0] = 1;
-				// 	//双人模式下，点击喜洋洋
-				// 	if(double_users[0] == 1 && double_users[1] == 1){
-				// 		$( "#select_animal" ).dialog( "close" );
-				// 		$('#choose_1').css('display', 'none');
-			 //        	$('#choose_2').css('display', 'none');
-				// 	}
-				// }				            
-		  //       addEvent();	
+				
 			});
 
 			$('#choose_2').on('click', function(){
@@ -822,22 +795,7 @@ $(document).ready(function(){
 				$('#choose_1').css('display', 'none');
 	        	$('#choose_2').css('display', 'none');
 	        	addEvent();
-
-				// if(model == 'single'){
-				// 	user_id = 1;
-				// 	$( "#select_animal" ).dialog( "close" );
-				// 	$('#choose_1').css('display', 'none');
-		  //       	$('#choose_2').css('display', 'none');
-				// }else{
-				// 	//双人模式下，点击灰太狼
-				// 	double_users[1] = 1;
-				// 	if(double_users[0] == 1 && double_users[1] == 1){
-				// 		$( "#select_animal" ).dialog( "close" );
-				// 		$('#choose_1').css('display', 'none');
-			 //        	$('#choose_2').css('display', 'none');
-				// 	}
-				// }					            
-		  //       addEvent();
+				
 			});
 
 			//单人模式，双人模式对话框
@@ -888,9 +846,7 @@ $(document).ready(function(){
 							      resizable: false,
 							      height:190,
 							      modal: true				      
-							    });
-					        	//$( this ).dialog( "close" );
-					            //addEvent();						            		            
+							    });					        						            		            
 					        }
 					      }
 					    });
@@ -898,20 +854,7 @@ $(document).ready(function(){
 		        }
 			})
 		    
-		};
-
-		var sfpDebug = function(){
-			//测试开始对话框：ok
-			// console.log('level:'+level);
-			// console.log('model:'+model);
-			// console.log('choose_type:'+choose_type);
-			// console.log('user_id:'+user_id);
-
-			//user click 
-			// console.log('click_array:'+click_array);
-			// console.log('start_click:'+start_click);
-
-		}			
+		};				
 
 		/*
 		 * 一个回合结束后的操作
