@@ -158,13 +158,15 @@ $(document).ready(function(){
 		*/
 		var findTarget = function(a){
 			var result = 0;
-
-			var dom_array = $('#users_'+(a+1)+'_tr td');
-			for(var i=0, l=dom_array.length; i<l; i++){
-				if($(dom_array[i]).text() == now_position[a]){
-					result = $(dom_array[i]).position().left;
+			
+			if(now_position[a] != 0){
+				var dom_array = $('#users_'+(a+1)+'_tr td');
+				for(var i=0, l=dom_array.length; i<l; i++){
+					if($(dom_array[i]).text() == now_position[a]){
+						result = $(dom_array[i]).position().left;
+					}
 				}
-			}
+			}								
 
 			return result;
 		}
@@ -281,8 +283,13 @@ $(document).ready(function(){
 		};
 
 		var parabolaJump = function(a, left, interval_time){
-			var user = parabola(a, left, interval_time);			
-			user.start();
+			var user = parabola(a, left, interval_time);
+			if($('#users_'+(a+1)).position().left < left){
+				user.start();
+			}else{
+				$('.jump').css('display', 'none');
+			    phase(a);
+			}	
 		}		
 
 		/*
@@ -294,11 +301,13 @@ $(document).ready(function(){
 				//来自singleroad
 				equal_first_result = 1;
 				record_6341(a); 
+				
 				now_position[a] = +(now_position[a]+step);
 				var left_val = findTarget(a);
 				$('.jump').css('display', 'block');				
 				p_a = a;
-				p_left = left_val;			
+				p_left = left_val;
+							
 			}else{
 				//来自trClick
 				var pos = $(click_target).text();
