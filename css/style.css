@@ -18,10 +18,11 @@ body{
 
 /*----------------用户模块---------------*/
 .users{
- 	width:200px;
+ 	width:1300px;
  	height:200px;
  	margin: 0 auto;
- 	margin-bottom: 21px;
+ 	margin-bottom: 41px;
+ 	margin-top: -100px;
 }
 
 .users_1_con{
@@ -79,7 +80,7 @@ body{
 /*---------------------格子模块----------------*/
 .road{
 	width:601px;
-	height:100px;
+	height:120px;
 	margin:0 auto;
 	position: relative;
 }
@@ -91,7 +92,7 @@ body{
 /*图片的大小还需要重新调整*/
 .road .users_1,
 .road .users_2{
-	width:50px;
+	width:42px;
 	height:50px;
 	float:left;
 }
@@ -101,7 +102,7 @@ body{
 	background:url(../images/user1_50.png) center no-repeat;
 	position: absolute;
 	top:0px;
-	left:0px;
+	/*left:13px;*/
 }
 
 .road .users_2{
@@ -109,12 +110,11 @@ body{
 	background:url(../images/user2_50.png) center no-repeat;
 	position: absolute;
 	top:0px;
-	left:0px;
+	/*left:13px;*/
 }
 
 .level_1 td{
-	width:43px;
-	height:50px;
+	width:43px;	
 	border: 1px solid black;
 	background-color: white;
 }
@@ -127,7 +127,7 @@ td p{
 }
 /*---------------------跳跃模块----------------*/
 .jump{
-	width: 368px;
+	width: 570px;
   	float: right;
   	display: none;
 }

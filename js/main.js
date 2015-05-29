@@ -40,6 +40,14 @@ $(document).ready(function(){
 		var p_left = '';
 		//双人模式下，选中的用户个数，为了判断喜洋洋和灰太狼是否都选中。
 		var double_users = [0, 0];
+		//记录上一次到达终点后的总得分
+		var score_array = [0, 0];
+		//记录上一次到达终点后的奖励分
+		var award_array = [0, 0];
+		//记录某一关的反应时间
+		var reaction_time_1 = [];
+		var reaction_time_2 = [];
+		var onestep_one = 0;
 
 	//需要记录的字段
 		var Numset_1 = 0;
@@ -62,21 +70,46 @@ $(document).ready(function(){
 		var radiolist6set_2 = 0;
 
 		//把tr的动物封装为parabola对象
-		var parabola = function(a, left, interval_time){
+		var parabola = function(a, left, interval_time, move_distance){
 			return new Parabola({
 			        el: '#users_'+(a+1),
-			        offset: [43, 0],
-			        curvature: 0.01,
+			        offset: [move_distance, 0],
+			        curvature: 0.05,
 			        duration: interval_time[0],
-			        callback:function(){			            
-			            if(($('#users_'+(a+1)).position().left+1) < left){
-			            	setTimeout(function(){
-			            		parabolaJump(a, left, interval_time);
-			            	}, interval_time[1]);			            	
-			            }else{
-			            	$('.jump').css('display', 'none');
-			            	phase(a);
-			            }
+			        callback:function(){
+			        	if(onestep_one == 0){
+
+			        		if(level == 4 || level == 5 || level == 9 || level == 10 || level == 14 || level == 15){
+			            		if(($('#users_'+(a+1)).position().left+14) < left){
+					            	setTimeout(function(){
+					            		parabolaJump(a, left, interval_time, move_distance);
+					            	}, interval_time[1]);			            	
+					            }else{
+					            	$('.jump').css('display', 'none');
+					            	phase(a);
+					            }
+				            }else{
+				            	if(($('#users_'+(a+1)).position().left+1) < left){
+					            	setTimeout(function(){
+					            		parabolaJump(a, left, interval_time, move_distance);
+					            	}, interval_time[1]);			            	
+					            }else{
+					            	$('.jump').css('display', 'none');
+					            	phase(a);
+					            }	
+				            }			        		
+
+			        	}else{
+
+			        		if(($('#users_'+(a+1)).position().left+1) < left){
+				            				            	
+				            }else{
+				            	$('.jump').css('display', 'none');
+				            	phase(a);
+				            }
+
+			        	}			            
+			            
 			        }
 			       });
 		}
@@ -87,11 +120,11 @@ $(document).ready(function(){
 		var levelToEndpos = function(level){
 			var result = 0;			
 
-			if(level == 1 || level == 4 || level == 5 || level == 9 || level == 10){
+			if(level == 1 || level == 2 || level == 6 || level == 7 || level == 11 || level ==12){
 				result = 10;
-			}else if(level == 2 || level == 6 || level == 11){
+			}else if(level == 3 || level == 8 || level == 13){
 				result = 20;				 
-			}else if(level == 3 || level == 7 || level == 8 || level == 12 || level == 13){
+			}else if(level == 4 || level == 5 || level == 9 || level == 10 || level == 14 || level ==15){
 				result = 30;
 			}else{
 				console.log('level error, level='+level);
@@ -106,7 +139,7 @@ $(document).ready(function(){
 		var getStep = function(){
 			var result = 0;
 
-			if(level < 4){
+			if(level < 6){
 				if(users_step[0] > users_step[1]){
 					result = users_step[0];
 				}else{
@@ -198,21 +231,33 @@ $(document).ready(function(){
 			var result = '';
 
 			result += '<td style="background:url(images/start.png) no-repeat -6px"><p></p></td>';
-			if(level == 1 || level == 4 || level == 5 || level == 9 || level == 10){
+			if(level == 1 || level == 2 || level == 6 || level == 7 || level == 11 || level == 12){
 				for(var i = 1; i < 11; i++){
 					$('.road').css('width', '516');
-					result += '<td style="background:'+color_tr[i-1]+'; color:'+color_p[i-1]+'"><p>'+i+'</p></td>'; 
+					result += '<td style="background:'+color_tr[i-1]+'; color:'+color_p[i-1]+'; height:50px;"><p style="line-height:50px">'+i+'</p></td>'; 
 				}
-			}else if(level == 2 || level == 6 || level == 11){
+				$('.road .users_2').css('left', '0');
+				$('.road .users_1').css('left', '0');
+				$('.road .users_2').css('background', 'url(images/user2_50.png) center no-repeat');
+				$('.road .users_1').css('background', 'url(images/user1_50.png) center no-repeat');
+			}else if(level == 3 || level == 8 || level == 13){
 				for(var i = 1; i < 21; i++){
 					$('.road').css('width', '946');
-					result += '<td style="background:'+color_tr[(i-1)%10]+'; color:'+color_p[(i-1)%10]+'"><p>'+i+'</p></td>';
-				}				 
-			}else if(level == 3 || level == 7 || level == 8 || level == 12 || level == 13){
-				$('.road').css('width', '1391');
-				for(var i = 1; i < 31; i++){
-					result += '<td style="background:'+color_tr[(i-1)%10]+'; color:'+color_p[(i-1)%10]+'"><p>'+i+'</p></td>';
+					result += '<td style="background:'+color_tr[(i-1)%10]+'; color:'+color_p[(i-1)%10]+'; height:50px;"><p style="line-height:50px">'+i+'</p></td>';
 				}
+				$('.road .users_2').css('left', '0');
+				$('.road .users_1').css('left', '0');
+				$('.road .users_2').css('background', 'url(images/user2_50.png) center no-repeat');
+				$('.road .users_1').css('background', 'url(images/user1_50.png) center no-repeat');				 
+			}else if(level == 4 || level == 5 || level == 9 || level == 10 || level == 14 || level == 15){
+				$('.road').css('width', '987');
+				for(var i = 1; i < 31; i++){
+					result += '<td style="background:'+color_tr[(i-1)%10]+'; color:'+color_p[(i-1)%10]+'; width:30px; height:33px; line-height:33px"><p style="line-height:33px">'+i+'</p></td>';
+				}
+				$('.road .users_2').css('left', '13px');
+				$('.road .users_1').css('left', '13px');
+				$('.road .users_2').css('background', 'url(images/user2_30.png) center no-repeat');
+				$('.road .users_1').css('background', 'url(images/user1_30.png) center no-repeat');
 			}else{
 				return;
 			}
@@ -228,18 +273,14 @@ $(document).ready(function(){
 		var level_to_step = function(level){
 			var result = 0;			
 
-			if(level == 1 || level == 8 || level == 13){
-				result = Math.ceil(Math.random()*10);
-			}else if(level == 2){
-				result = Math.ceil(Math.random()*20);
-			}else if(level == 3){
-				result = Math.ceil(Math.random()*30);	
-			}else if(level == 4 || level == 9){
+			if(level == 1 || level == 6 || level == 11){
 				result = Math.ceil(Math.random()*2);
-			}else if(level == 5 || level == 10){
+			}else if(level == 2 || level == 7 || level == 12){
 				result = Math.ceil(Math.random()*3);
-			}else if(level == 6 || level == 7 || level == 11 || level == 12){
+			}else if(level == 3 || level == 4 || level == 8 || level == 9 || level == 13 || level == 14){
 				result = Math.ceil(Math.random()*5);
+			}else if(level == 5 || level == 10 || level == 15){
+				result = Math.ceil(Math.random()*10);
 			}else{
 				console.log('level error, in level_to_step, level='+level);
 			}
@@ -252,38 +293,49 @@ $(document).ready(function(){
 		*/
 		var speedScore = function(a){
 
-			if(users_time[a] < 1000){
-				if(a == 0){
-					radiolist2set_1 += 3;
-					Numset_1 += 3;
+			if(users_time[a] > 1000){
+
+				if(users_time[a] < 2000){
+					if(a == 0){
+						radiolist2set_1 += 3;
+						Numset_1 += 3;
+					}else{
+						radiolist2set_2 += 3;
+						Numset_2 += 3;
+					}				
+				}else if(users_time[a] < 3000){
+					if(a == 0){
+						radiolist2set_1 += 2;
+						Numset_1 += 2;
+					}else{
+						radiolist2set_2 += 2;
+						Numset_2 += 2;
+					}
+				}else if(users_time[a] < 4000){
+					if(a == 0){
+						radiolist2set_1 += 1;
+						Numset_1 += 1;
+					}else{
+						radiolist2set_2 += 1;
+						Numset_2 += 1;
+					}
 				}else{
-					radiolist2set_2 += 3;
-					Numset_2 += 3;
-				}				
-			}else if(users_time[a] < 2000){
-				if(a == 0){
-					radiolist2set_1 += 2;
-					Numset_1 += 2;
-				}else{
-					radiolist2set_2 += 2;
-					Numset_2 += 2;
+					console.log('反应时间超过3000ms');
 				}
-			}else if(users_time[a] < 3000){
-				if(a == 0){
-					radiolist2set_1 += 1;
-					Numset_1 += 1;
-				}else{
-					radiolist2set_2 += 1;
-					Numset_2 += 1;
-				}
-			}else{
-				console.log('反应时间超过3000ms');
-			}
+
+			}			
 
 		};
 
 		var parabolaJump = function(a, left, interval_time){
-			var user = parabola(a, left, interval_time);
+
+			var user = {};
+
+			if(level == 4 || level == 5 || level == 9 || level == 10 || level == 14 || level == 15){				
+				user = parabola(a, left, interval_time, 30);				
+			}else{
+				user = parabola(a, left, interval_time, 43);
+			}
 			if($('#users_'+(a+1)).position().left < left){
 				user.start();
 			}else{
@@ -514,8 +566,10 @@ $(document).ready(function(){
 			    		end_click = Date.now();
 						users_time[a] = end_click-start_click;
 						if(a == 0){
+							reaction_time_1.push(users_time[a])
 							Timeset_1.push(users_time[a]);
 						}else{
+							reaction_time_2.push(users_time[a])
 							Timeset_2.push(users_time[a]);
 						}
 
@@ -539,8 +593,10 @@ $(document).ready(function(){
 				    		end_click = Date.now();
 							users_time[a] = end_click-start_click;
 							if(a == 0){
+								reaction_time_1.push(users_time[a])
 								Timeset_1.push(users_time[a]);
 							}else{
+								reaction_time_2.push(users_time[a])
 								Timeset_2.push(users_time[a]);
 							}
 							//另一个用户未点击
@@ -570,8 +626,10 @@ $(document).ready(function(){
 							end_click = Date.now();
 							users_time[a] = end_click-start_click;
 							if(a == 0){
+								reaction_time_1.push(users_time[a])
 								Timeset_1.push(users_time[a]);
 							}else{
+								reaction_time_2.push(users_time[a])
 								Timeset_2.push(users_time[a]);
 							}
 
@@ -611,8 +669,10 @@ $(document).ready(function(){
 						end_click = Date.now();
 						users_time[1-user_id] = end_click-start_click;
 						if(user_id == 0){
+							reaction_time_2.push(users_time[1-user_id])
 							Timeset_2.push(users_time[1-user_id]);
 						}else{
+							reaction_time_1.push(users_time[1-user_id])
 							Timeset_1.push(users_time[1-user_id]);
 						}
 
@@ -636,8 +696,10 @@ $(document).ready(function(){
 				    		end_click = Date.now();
 							users_time[1-user_id] = end_click-start_click;
 							if(user_id == 0){
+								reaction_time_2.push(users_time[1-user_id])
 								Timeset_2.push(users_time[1-user_id]);
 							}else{
+								reaction_time_1.push(users_time[1-user_id])
 								Timeset_1.push(users_time[1-user_id]);
 							}
 
@@ -769,11 +831,20 @@ $(document).ready(function(){
 		};
 
 		//程序开始前的准备工作:对话框--addEvent;
-		var prepare = function() {			
+		var prepare = function() {
+			$('#one-step').on('click', function(){
+				$('#one-step').css('border', '1px solid yellow');
+				$('#slow-jump').css('border', '');
+				$('#fast-jump').css('border', '');
+				parabola_array = [250, 100];
+				onestep_one = 1;								
+				parabolaJump(p_a, p_left, parabola_array);					
+			})			
 
 			$('#fast-jump').on('click', function(){
 				$('#fast-jump').css('border', '1px solid yellow');
 				$('#slow-jump').css('border', '');
+				$('#one-step').css('border', '');
 				parabola_array = [100, 10];				
 				parabolaJump(p_a, p_left, parabola_array);					
 			})
@@ -781,6 +852,7 @@ $(document).ready(function(){
 			$('#slow-jump').on('click', function(){
 				$('#slow-jump').css('border', '1px solid yellow');
 				$('#fast-jump').css('border', '');
+				$('#one-step').css('border', '');
 				parabola_array = [250, 100];
 				parabolaJump(p_a, p_left, parabola_array);	
 			})
@@ -816,12 +888,12 @@ $(document).ready(function(){
 		        buttons: {
 		        	"开始": function(){
 		        		level = $('input[name="level"]:checked').val();
-		        		if(level == 4 || level == 5 || level == 6 || level == 7 || level == 8){
+		        		if(level == 6 || level == 7 || level == 8 || level == 9 || level == 10){
 		        			choose_type = 'add';
-		        		}else if(level == 9 || level == 10 || level == 11 || level == 12 || level == 13){
+		        		}else if(level == 11 || level == 12 || level == 13 || level == 14 || level == 15){
 							choose_type = 'minus';
 		        		}else{
-		        			console.log('no need click ,level = 1, 2, 3');
+		        			console.log('no need click ,level = 1, 2, 3, 4, 5');
 		        		}
 		        		//改变格子
 		        		var road_content = level_to_road(level);
@@ -889,6 +961,7 @@ $(document).ready(function(){
 				equal_first_result = 0;	
 				click_target = -1;
 				single_sto = '';
+				onestep_one = 0;
 
 				//把数字变为气球
 				$('#users_1_bal').html('<img src="images/click.png"><p>点这里</p>');
@@ -904,13 +977,80 @@ $(document).ready(function(){
 				if(end_score == 0){
 					//没有到终点
 				}else{
+					
 					//到终点
 					now_position = [0, 0];
 					//判断是进行下一次游戏还是下一关游戏
 			 		var normative_score = normativeScore(end_score);
+
+			 		//每一关结束后，会出现显示结果的对话框，以下为对话框赋值
+			 		$('#score_1').text(Numset_1-score_array[0]);
+			 		$('#score_2').text(Numset_2-score_array[1]);
+			 		$('#award_1').text(radiolist2set_1-award_array[0]);
+			 		$('#award_2').text(radiolist2set_2-award_array[1]);
+			 		var average_1 = 0;
+			 		var average_2 = 0;
+			 		for(var i=0; i<reaction_time_1.length; i++){
+			 			average_1 += reaction_time_1[i];
+			 		}
+			 		average_1 = average_1/reaction_time_1.length;
+			 		for(var i=0; i<reaction_time_2.length; i++){
+			 			average_2 += reaction_time_2[i];
+			 		}
+			 		average_2 = average_2/reaction_time_2.length;
+			 		$('#average_time_1').text(average_1);
+			 		$('#average_time_2').text(average_2);
+
+			 		//每一关需要记录的数据 初始化
+			 		score_array[0] = Numset_1;
+					score_array[1] = Numset_2;
+					award_array[0] = radiolist2set_1;
+					award_array[1] = radiolist2set_2;
+					reaction_time_1 = [];
+					reaction_time_2 = [];
+
+					$( "#show_result" ).css('display', 'block');
+			 		$( "#show_result" ).dialog({
+								      resizable: false,
+								      height:190,
+								      modal: true,
+								      buttons: {
+								      	'返回':function(){
+								      		$('#select_level').dialog({
+												resizable: false,
+												width:370,
+										    	height:470,
+										        modal: true,
+										        buttons: {
+										        	'开始': function(){
+										        		level = $('input[name="level"]:checked').val();
+										        		if(level == 6 || level == 7 || level == 8 || level == 9 || level == 10){
+										        			choose_type = 'add';
+										        		}else if(level == 11 || level == 12 || level == 13 || level == 14 || level == 15){
+															choose_type = 'minus';
+										        		}else{
+										        			console.log('no need click ,level = 1, 2, 3, 4, 5');
+										        		}
+										        		//改变格子
+										        		var road_content = level_to_road(level);
+										        		
+										        		$('tr').html('');
+														$('tr').append(road_content);
+
+														$( "#show_result" ).css('display', 'block');
+														$( "#show_result" ).dialog( "close" );
+														$( "#select_level" ).dialog( "close" );
+										        	}
+										        }
+										    });
+								      		
+								      	}
+								      }				      
+								    });
+
 			 		if(normative_score > 4){
 			 			//下一关游戏			 			
-			 			if(level == 13){
+			 			if(level == 15){
 			 				alert('恭喜你闯关成功！');
 			 				//整个游戏完全结果，可在此输出所有的指标
 			 				end();
@@ -923,7 +1063,7 @@ $(document).ready(function(){
 			 				$('#users_2').css('left', '0px');
 
 			 				level++;
-			 				if(level > 8){
+			 				if(level > 10){
 			 					choose_type = 'minus';
 			 				}
 			 							 			

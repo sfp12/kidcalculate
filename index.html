@@ -11,27 +11,45 @@
 	<div class='container'>
 		<div class='title'></div>
 		<div id='select_level' title='选择关数'>
-			<input type="radio" name="level" value="1" /> 第1关（跑道1-10，数字1-10）<br />
-			<input type="radio" name="level" value="2" /> 第2关（跑道1-20，数字1-10）<br />
-			<input type="radio" name="level" value="3" /> 第3关（跑道1-30，数字1-10）<br />
-			<input type="radio" name="level" value="4" /> 第4关（加法，跑道1-10，数字1-2）<br />
-			<input type="radio" name="level" value="5" /> 第5关（加法，跑道1-10，数字1-3）<br />
+			<input type="radio" name="level" value="1" /> 第1关（跑道1-10，数字1-2）<br />
+			<input type="radio" name="level" value="2" /> 第2关（跑道1-10，数字1-3）<br />
+			<input type="radio" name="level" value="3" /> 第3关（跑道1-20，数字1-5）<br />
+			<input type="radio" name="level" value="4" /> 第4关（跑道1-30，数字1-5）<br />
+			<input type="radio" name="level" value="5" /> 第5关（跑道1-30，数字1-10）<br />
 
-			<input type="radio" name="level" value="6" /> 第6关（加法，跑道1-20，数字1-5）<br />
-			<input type="radio" name="level" value="7" /> 第7关（加法，跑道1-30，数字1-5）<br />
-			<input type="radio" name="level" value="8" /> 第8关（加法，跑道1-30，数字1-10）<br />
-			<input type="radio" name="level" value="9" /> 第9关（减法，跑道1-10，数字1-2）<br />
-			<input type="radio" name="level" value="10" /> 第10关（减法，跑道1-10，数字1-3）<br />
+			<input type="radio" name="level" value="6" /> 第6关（加法，跑道1-10，数字1-2）<br />
+			<input type="radio" name="level" value="7" /> 第7关（加法，跑道1-10，数字1-3）<br />
+			<input type="radio" name="level" value="8" /> 第8关（加法，跑道1-20，数字1-5）<br />
+			<input type="radio" name="level" value="9" /> 第9关（加法，跑道1-30，数字1-5）<br />
+			<input type="radio" name="level" value="10" /> 第10关（加法，跑道1-30，数字1-10）<br />
 
-			<input type="radio" name="level" value="11" /> 第11关（减法，跑道1-20，数字1-5）<br />
-			<input type="radio" name="level" value="12" /> 第12关（减法，跑道1-30，数字1-5）<br />
-			<input type="radio" name="level" value="13" /> 第13关（减法，跑道1-30，数字1-10）<br />			
+			<input type="radio" name="level" value="11" /> 第11关（减法，跑道1-10，数字1-2）<br />
+			<input type="radio" name="level" value="12" /> 第12关（减法，跑道1-10，数字1-3）<br />
+			<input type="radio" name="level" value="13" /> 第13关（减法，跑道1-20，数字1-5）<br />
+			<input type="radio" name="level" value="14" /> 第14关（减法，跑道1-30，数字1-5）<br />
+			<input type="radio" name="level" value="15" /> 第15关（减法，跑道1-30，数字1-10）<br />			
 		</div>
 		<div id='select_model' title='选择模式'>
 		</div>
 		<div id='select_animal' title='选择动物' style='  padding: 0 60px; padding-top: 20px;'>
 			<img id='choose_1' style='float:left; display:none' src='images/user1_50.png'>
 			<img id='choose_2' style='float:right; display:none' src='images/user2_50.png'>
+		</div>
+		<div id='show_result' title='展示结果' style=' display:none; padding: 0 60px; padding-top: 20px;'>
+			<div style='float:left'>
+				<img id='choose_1' style='float:left; display:none' src='images/user1_50.png'>
+				<p>总得分:<span id='score_1'></span></p>
+				<p>奖励分:<span id='award_1'></span></p>
+				<p>平均点击时间:<span id='average_time_1'></span></p>
+				<p>常模分数:<span id='normative_1'></span></p>
+			</div>
+			<div style='float:left'>
+				<img id='choose_2' style='float:right; display:none' src='images/user2_50.png'>
+				<p>总得分:<span id='score_2'></span></p>
+				<p>奖励分:<span id='award_2'></span></p>
+				<p>平均点击时间:<span id='average_time_2'></span></p>
+				<p>常模分数:<span id='normative_2'></span></p>
+			</div>			
 		</div>
 		<!-- 用户模块 -->
 		<div class='users'>
@@ -76,6 +94,7 @@
 			</div>
 		</div>
 		<div class='jump'>
+			<img id='one-step' src='images/onestep.png'>
 			<img id='slow-jump' src='images/slow.png'>
 			<img id='fast-jump' src='images/fast.png'>
 		</div>
@@ -84,7 +103,6 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
     <script src="js/parabola.js"></script> 
-    <script src="js/common.js"></script> 
     <script src="js/main.js"></script>
   </body>
 </html>
