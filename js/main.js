@@ -74,9 +74,10 @@ $(document).ready(function(){
 			return new Parabola({
 			        el: '#users_'+(a+1),
 			        offset: [move_distance, 0],
-			        curvature: 0.05,
+			        curvature: 0.1,
 			        duration: interval_time[0],
 			        callback:function(){
+			        	$('#music').html();
 			        	if(onestep_one == 0){
 
 			        		if(level == 4 || level == 5 || level == 9 || level == 10 || level == 14 || level == 15){
@@ -113,6 +114,31 @@ $(document).ready(function(){
 			        }
 			       });
 		}
+
+		/**
+         * 创建音频
+         * @param 
+         * @return 
+         */
+        var createAudio = function(a){  
+          var result='';
+          if(navigator.userAgent.indexOf("Chrome") > -1){ 
+            //如果是Chrome： 
+            result='<audio src='+a+' type="audio/mp3" autoplay=”autoplay” hidden="true"></audio>'; 
+            }else if(navigator.userAgent.indexOf("Firefox")!=-1){ 
+            //如果是Firefox： 
+            result='<embed src='+a+' type="audio/mp3" hidden="true" loop="false" mastersound></embed>'; 
+            }else if(navigator.appName.indexOf("Microsoft Internet Explorer")!=-1 && document.all){ 
+            //如果是IE(6,7,8): 
+            result='<object classid="clsid:22D6F312-B0F6-11D0-94AB-0080C74C7E95"><param name="AutoStart" value="1" /><param name="Src" value='+a+' /></object>'; 
+            }else if(navigator.appName.indexOf("Opera")!=-1){ 
+            //如果是Oprea： 
+            result='<embed src='+a+' type="audio/mpeg" loop="false"></embed>';
+            }else{ 
+            result='<embed src='+a+' type="audio/mp3" hidden="true" loop="false" mastersound></embed>'; 
+            } 
+          return result;
+        }
 		
 		/*
 		*根据level取得终点的位置
@@ -337,6 +363,7 @@ $(document).ready(function(){
 				user = parabola(a, left, interval_time, 43);
 			}
 			if($('#users_'+(a+1)).position().left < left){
+				$('#music').html(createAudio('audio/jump.mp3'));
 				user.start();
 			}else{
 				$('.jump').css('display', 'none');
@@ -732,7 +759,7 @@ $(document).ready(function(){
 
 			//如果没有点击过
 			if(click_array[a] == 0){				
-
+				$('#music').html(createAudio('audio/jump.mp3'));
 				var pos = $('#users_'+(a+1)+'_b').position();
 				        
 		        $('#users_'+(a+1)+'_b').animate({
@@ -750,7 +777,7 @@ $(document).ready(function(){
 		            $('#users_'+(a+1)+'_b').animate({
 		            'top': pos.top + 'px'
 		            }, 150, 'swing', function(){	            	
-
+		            	$('#music').html();
 		            	if(model == 'single'){
 		            		if(a == user_id){
 		            			userClick(1-a);
@@ -832,6 +859,52 @@ $(document).ready(function(){
 
 		//程序开始前的准备工作:对话框--addEvent;
 		var prepare = function() {
+
+			// $( "#show_result" ).css('display', 'block');
+			// 		$( "#show_user_2" ).css('display', 'block');
+			// 		$( "#show_user_1" ).css('display', 'block');
+			//  		$( "#show_result" ).dialog({
+			// 					      resizable: false,
+			// 					      height:330,
+			// 					      modal: true,
+			// 					      width: 510,
+			// 					      buttons: {
+			// 					      	'返回':function(){
+			// 					      		$('#music').html();
+			// 					      		$('#select_level').dialog({
+			// 									resizable: false,
+			// 									width:370,
+			// 							    	height:470,
+			// 							        modal: true,
+			// 							        buttons: {
+			// 							        	'开始': function(){
+			// 							        		level = $('input[name="level"]:checked').val();
+			// 							        		if(level == 6 || level == 7 || level == 8 || level == 9 || level == 10){
+			// 							        			choose_type = 'add';
+			// 							        		}else if(level == 11 || level == 12 || level == 13 || level == 14 || level == 15){
+			// 												choose_type = 'minus';
+			// 							        		}else{
+			// 							        			console.log('no need click ,level = 1, 2, 3, 4, 5');
+			// 							        		}
+			// 							        		//改变格子
+			// 							        		var road_content = level_to_road(level);
+										        		
+			// 							        		$('tr').html('');
+			// 											$('tr').append(road_content);
+
+			// 											$( "#show_result" ).css('display', 'none');
+			// 											$( "#show_user_2" ).css('display', 'none');
+			// 											$( "#show_user_1" ).css('display', 'none');
+			// 											$( "#show_result" ).dialog( "close" );
+			// 											$( "#select_level" ).dialog( "close" );
+			// 							        	}
+			// 							        }
+			// 							    });
+								      		
+			// 					      	}
+			// 					      }				      
+			// 					    });			
+
 			$('#one-step').on('click', function(){
 				$('#one-step').css('border', '1px solid yellow');
 				$('#slow-jump').css('border', '');
@@ -993,13 +1066,24 @@ $(document).ready(function(){
 			 		for(var i=0; i<reaction_time_1.length; i++){
 			 			average_1 += reaction_time_1[i];
 			 		}
-			 		average_1 = average_1/reaction_time_1.length;
+			 		if(reaction_time_1.length == 0){
+			 			average_1 = 0;
+			 		}else{
+			 			average_1 = average_1/reaction_time_1.length;
+			 		}			 		
+			 		
 			 		for(var i=0; i<reaction_time_2.length; i++){
 			 			average_2 += reaction_time_2[i];
 			 		}
-			 		average_2 = average_2/reaction_time_2.length;
-			 		$('#average_time_1').text(average_1);
-			 		$('#average_time_2').text(average_2);
+			 		if(reaction_time_2.length == 0){
+			 			average_2 = 0;
+			 		}else{
+			 			average_2 = average_2/reaction_time_2.length;
+			 		}			 		
+			 		console.log('average_1:'+average_1);
+			 		console.log('average_2:'+average_2);
+			 		$('#average_time_1').text(Math.round(average_1));
+			 		$('#average_time_2').text(Math.round(average_2));
 
 			 		//每一关需要记录的数据 初始化
 			 		score_array[0] = Numset_1;
@@ -1009,13 +1093,22 @@ $(document).ready(function(){
 					reaction_time_1 = [];
 					reaction_time_2 = [];
 
+					$('#music').html(createAudio('audio/end.mp3'));
 					$( "#show_result" ).css('display', 'block');
+					$( "#show_user_2" ).css('display', 'block');
+					$( "#show_user_1" ).css('display', 'block');
 			 		$( "#show_result" ).dialog({
 								      resizable: false,
-								      height:190,
+								      height:330,
 								      modal: true,
+								      width: 510,
 								      buttons: {
 								      	'返回':function(){
+								      		$('#music').html();
+								      		$( "#show_result" ).css('display', 'none');
+											$( "#show_user_2" ).css('display', 'none');
+											$( "#show_user_1" ).css('display', 'none');
+											$( "#show_result" ).dialog( "close" );
 								      		$('#select_level').dialog({
 												resizable: false,
 												width:370,
@@ -1036,9 +1129,7 @@ $(document).ready(function(){
 										        		
 										        		$('tr').html('');
 														$('tr').append(road_content);
-
-														$( "#show_result" ).css('display', 'block');
-														$( "#show_result" ).dialog( "close" );
+														
 														$( "#select_level" ).dialog( "close" );
 										        	}
 										        }
@@ -1056,8 +1147,7 @@ $(document).ready(function(){
 			 				end();
 			 			}else{
 
-			 				end_score = 0;
-			 				alert('恭喜你闯关成功，请继续下一关！');
+			 				end_score = 0;			 				
 			 				//用户回到最初的位置
 			 				$('#users_1').css('left', '0px');
 			 				$('#users_2').css('left', '0px');
@@ -1079,7 +1169,7 @@ $(document).ready(function(){
 				}		 		
 		 	}
 
-		 };
+		 };	
 
 		 /*
 		*根据最先到达终点的用户的总得分，计算出常模分数

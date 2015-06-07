@@ -12,7 +12,7 @@ body{
 /*------------------大容器------------------*/
 .container{	
 	border: 1px solid black;	
-	margin-top: 100px;
+	margin-top: 50px;
 	width: 1423px;
 }
 
@@ -128,6 +128,10 @@ td p{
 /*---------------------跳跃模块----------------*/
 .jump{
 	width: 570px;
-  	float: right;
+  	margin: 0 auto;
+  	display: none;
+}
+/*---------------------声音模块----------------*/
+.music{	
   	display: none;
 }
