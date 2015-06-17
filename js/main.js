@@ -584,27 +584,29 @@ $(document).ready(function(){
 				step = getStep();
 
 				if(model == 'single'){
-					//单人模式，不需要它比较大小
+					//单人模式，需要它比较大小
 					//数字大
 					//之前没有点击过
-					if(click_array[a+2] == 0){
+					if(users_step[user_id] >= users_step[1-user_id]){
+						if(click_array[a+2] == 0){
 
-						//计算反应时间
-			    		end_click = Date.now();
-						users_time[a] = end_click-start_click;
-						if(a == 0){
-							reaction_time_1.push(users_time[a])
-							Timeset_1.push(users_time[a]);
+							//计算反应时间
+				    		end_click = Date.now();
+							users_time[a] = end_click-start_click;
+							if(a == 0){
+								reaction_time_1.push(users_time[a])
+								Timeset_1.push(users_time[a]);
+							}else{
+								reaction_time_2.push(users_time[a])
+								Timeset_2.push(users_time[a]);
+							}
+
+							startMove(a, e);
+
 						}else{
-							reaction_time_2.push(users_time[a])
-							Timeset_2.push(users_time[a]);
+							console.error('click already');
 						}
-
-						startMove(a, e);
-
-					}else{
-						console.error('click already');
-					}
+					}					
 				}else{
 					//双人模式，需要它比较大小
 					if(users_step[a] < users_step[1-a]){
